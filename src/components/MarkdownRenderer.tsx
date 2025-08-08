@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { getApiBaseUrl } from "@/lib/config";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -14,14 +15,18 @@ interface MarkdownRendererProps {
   isEditable?: boolean;
 }
 
-export function MarkdownRenderer({ 
-  content, 
-  onContentChange, 
-  taskId, 
-  isEditable = true 
+export function MarkdownRenderer({
+  content,
+  onContentChange,
+  taskId,
+  isEditable = true
 }: MarkdownRendererProps) {
   const [editedContent, setEditedContent] = useState(content);
   const [activeTab, setActiveTab] = useState<"preview" | "edit">("preview");
+
+  useEffect(() => {
+    setEditedContent(content);
+  }, [content]);
 
   const handleSave = () => {
     onContentChange?.(editedContent);
@@ -70,7 +75,20 @@ export function MarkdownRenderer({
 
             <TabsContent value="preview" className="flex-1 min-h-0 mt-0">
               <div className="h-full overflow-y-auto prose prose-sm max-w-none dark:prose-invert">
-                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                <ReactMarkdown
+                  remarkPlugins={[remarkGfm]}
+                  urlTransform={(src) => {
+                    if (!src) return src;
+                    // If src is absolute http(s), leave it
+                    if (/^https?:\/\//i.test(src)) return src;
+                    // If src starts with /storage/, prefix backend base URL
+                    if (src.startsWith("/storage/")) {
+                      const base = getApiBaseUrl().replace(/\/$/, "");
+                      return `${base}${src}`;
+                    }
+                    return src;
+                  }}
+                >
                   {editedContent}
                 </ReactMarkdown>
               </div>
