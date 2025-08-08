@@ -44,11 +44,24 @@ export async function getResults(taskId: string) {
 }
 
 export async function getMarkdownContent(taskId: string) {
-  return apiFetch<string>(`/api/export/${encodeURIComponent(taskId)}/markdown?format=text`);
+  return apiFetch<string>(`/api/notes/${encodeURIComponent(taskId)}`);
+}
+
+export async function saveMarkdownContent(taskId: string, content: string) {
+  return apiFetch(`/api/notes/${encodeURIComponent(taskId)}`, {
+    method: "PUT",
+    body: JSON.stringify({ content }),
+  });
 }
 
 export function getExportMarkdownUrl(taskId: string) {
   // Return full URL for direct download
   const base = (typeof window !== 'undefined' ? (window.localStorage.getItem('apiBaseUrl') || 'http://localhost:8000') : 'http://localhost:8000').replace(/\/$/, "");
   return `${base}/api/export/${encodeURIComponent(taskId)}/markdown`;
+}
+
+export function getExportPdfUrl(taskId: string) {
+  // Return full URL for direct download
+  const base = (typeof window !== 'undefined' ? (window.localStorage.getItem('apiBaseUrl') || 'http://localhost:8000') : 'http://localhost:8000').replace(/\/$/, "");
+  return `${base}/api/export/${encodeURIComponent(taskId)}/pdf`;
 }

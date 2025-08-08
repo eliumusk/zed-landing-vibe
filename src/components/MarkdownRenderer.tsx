@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Edit3, Eye, Download } from "lucide-react";
+import { Edit3, Eye, Download, FileText } from "lucide-react";
 
 interface MarkdownRendererProps {
   content: string;
@@ -34,8 +34,13 @@ export function MarkdownRenderer({
   };
 
   const handleDownload = () => {
-    const base = (typeof window !== 'undefined' ? (window.localStorage.getItem('apiBaseUrl') || 'http://localhost:8000') : 'http://localhost:8000').replace(/\/$/, "");
+    const base = getApiBaseUrl().replace(/\/$/, "");
     window.open(`${base}/api/export/${taskId}/markdown`, '_blank');
+  };
+
+  const handlePdfExport = () => {
+    const base = getApiBaseUrl().replace(/\/$/, "");
+    window.open(`${base}/api/export/${taskId}/pdf`, '_blank');
   };
 
   return (
@@ -53,7 +58,15 @@ export function MarkdownRenderer({
               onClick={handleDownload}
             >
               <Download className="w-4 h-4 mr-1" />
-              导出
+              导出 MD
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handlePdfExport}
+            >
+              <FileText className="w-4 h-4 mr-1" />
+              导出 PDF
             </Button>
           </div>
         </div>

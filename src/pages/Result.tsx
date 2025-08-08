@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
@@ -7,13 +7,25 @@ import { Progress } from "@/components/ui/progress";
 import { VideoPlayer } from "@/components/VideoPlayer";
 import { TimelineView } from "@/components/TimelineView";
 import { MarkdownRenderer } from "@/components/MarkdownRenderer";
-import { getExportMarkdownUrl, getResults, getStatus, getMarkdownContent } from "@/lib/api";
+import { getExportMarkdownUrl, getResults, getStatus, getMarkdownContent, saveMarkdownContent } from "@/lib/api";
 import { ArrowLeft } from "lucide-react";
+import { toast } from "sonner";
 
 export default function Result() {
   const { taskId } = useParams<{ taskId: string }>();
   const nav = useNavigate();
   const [currentVideoTime, setCurrentVideoTime] = useState(0);
+
+  // Throttled video time update to prevent excessive re-renders
+  const handleVideoTimeUpdate = useCallback((time: number) => {
+    setCurrentVideoTime(prevTime => {
+      // Only update if the difference is significant (more than 0.1 seconds)
+      if (Math.abs(prevTime - time) > 0.1) {
+        return time;
+      }
+      return prevTime;
+    });
+  }, []);
 
   useEffect(() => {
     document.title = taskId ? `视频处理结果 · ${taskId}` : "视频处理结果";
@@ -96,13 +108,18 @@ export default function Result() {
     });
   }, [resultsQuery.data]);
 
-  const handleSegmentClick = (timestamp: number) => {
+  const handleSegmentClick = useCallback((timestamp: number) => {
     setCurrentVideoTime(timestamp);
-  };
+  }, []);
 
-  const handleMarkdownChange = (content: string) => {
-    // 这里可以添加保存到后端的逻辑
-    console.log("Markdown updated:", content);
+  const handleMarkdownChange = async (content: string) => {
+    try {
+      await saveMarkdownContent(taskId!, content);
+      toast.success("笔记保存成功");
+    } catch (error) {
+      console.error("Failed to save markdown:", error);
+      toast.error("保存失败，请重试");
+    }
   };
 
   return (
@@ -148,7 +165,7 @@ export default function Result() {
               <VideoPlayer
                 taskId={taskId}
                 currentTime={currentVideoTime}
-                onTimeUpdate={setCurrentVideoTime}
+                onTimeUpdate={handleVideoTimeUpdate}
               />
             )}
             
