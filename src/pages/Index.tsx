@@ -5,6 +5,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Download, Github, Bolt, Users, Brain, Video, Link as LinkIcon, Upload, Sparkles, FileDown, FileText, Image as ImageIcon, ShieldCheck, Languages } from "lucide-react";
 //
 const Index = () => {
+  const logo = "/lovable-uploads/1a269a26-9009-4b73-80c2-654445d2810b.png";
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
@@ -20,7 +21,7 @@ const Index = () => {
       <header className="sticky top-0 z-20 backdrop-blur supports-[backdrop-filter]:bg-background/70 border-b">
         <nav className="container mx-auto flex items-center justify-between py-4">
           <a href="/" className="flex items-center gap-2">
-            <img src="/lovable-uploads/1a269a26-9009-4b73-80c2-654445d2810b.png" alt="amazing_video2note logo" className="h-7 w-7" loading="lazy" />
+            <img src={logo} alt="amazing_video2note logo" className="h-7 w-7" loading="lazy" />
             <span className="text-lg font-semibold tracking-tight text-primary">amazing_video2note</span>
           </a>
           <div className="flex items-center gap-3">
