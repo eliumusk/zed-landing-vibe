@@ -49,18 +49,51 @@ export default function Result() {
   const s = statusQuery.data;
   const progress = Math.round(((s?.progress || 0) * 100));
 
-  // 处理时间轴数据
+  // 处理时间轴数据（从后端 results.results.multimodal_notes 读取，并兼容多种结构）
   const timelineSegments = useMemo(() => {
-    const results = resultsQuery.data;
-    if (!results?.multimodal_notes) return [];
+    const resp = resultsQuery.data as any;
+    const results = resp?.results;
+    if (!results) return [];
 
-    return results.multimodal_notes.map((note: any, index: number) => ({
-      timestamp: note.timestamp || index * 30, // 假设每段30秒
-      endTimestamp: note.end_timestamp,
-      text: note.text || note.content || "",
-      summary: note.summary || note.title,
-      frameUrl: note.frame_file || note.image_file
-    }));
+    // 后端的图文笔记JSON结构：{ video_info, segments: [...], statistics }
+    const notesObj = results.multimodal_notes;
+    const segments: any[] = Array.isArray(notesObj)
+      ? notesObj
+      : (notesObj?.segments || []);
+
+    const base = (typeof window !== 'undefined'
+      ? (window.localStorage.getItem('apiBaseUrl') || 'http://localhost:8000')
+      : 'http://localhost:8000').replace(/\/$/, "");
+
+    return segments.map((seg, index) => {
+      // 计算开始时间（秒），接口里是字符串，需要解析
+      const parseTime = (t?: string) => {
+        if (!t) return index * 30;
+        // 形如 00:02:06.020
+        const m = t.match(/^(\d{2}):(\d{2}):(\d{2})\.(\d{3})$/);
+        if (!m) return index * 30;
+        const [, hh, mm, ss, ms] = m;
+        return Number(hh) * 3600 + Number(mm) * 60 + Number(ss) + Number(ms) / 1000;
+      };
+
+      const timestamp = seg.timestamp ?? parseTime(seg.start_time);
+      const endTimestamp = seg.end_timestamp ?? parseTime(seg.end_time);
+
+      // 关键帧，取第一张
+      let rel = (seg.key_frames?.[0] as string) || ""; // 例如: "frames/segment_xxx/unique_frame_000001.jpg"
+      // 生成完整URL：/storage/tasks/{taskId}/multimodal_notes/{rel}
+      const fullFrameUrl = (typeof window !== 'undefined' && resp?.task_id)
+        ? `${base}/storage/tasks/${resp.task_id}/multimodal_notes/${rel.replace(/^\/+/, '')}`
+        : undefined;
+
+      return {
+        timestamp,
+        endTimestamp,
+        text: seg.text || seg.content || "",
+        summary: seg.summary || seg.title || "",
+        frameUrl: fullFrameUrl,
+      };
+    });
   }, [resultsQuery.data]);
 
   const handleSegmentClick = (timestamp: number) => {

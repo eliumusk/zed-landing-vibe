@@ -22,8 +22,8 @@ export function VideoPlayer({ taskId, currentTime, onTimeUpdate }: VideoPlayerPr
     }
   };
 
-  // 后端需要提供：GET /api/video/{task_id}
-  const videoUrl = `http://localhost:8000/api/video/${taskId}`;
+  // 直接使用静态路径提供视频文件
+  const videoUrl = `http://localhost:8000/storage/tasks/${taskId}/original_video.mp4`;
 
   return (
     <Card className="overflow-hidden">

@@ -29,7 +29,8 @@ export function MarkdownRenderer({
   };
 
   const handleDownload = () => {
-    window.open(`http://localhost:8000/api/export/${taskId}/markdown`, '_blank');
+    const base = (typeof window !== 'undefined' ? (window.localStorage.getItem('apiBaseUrl') || 'http://localhost:8000') : 'http://localhost:8000').replace(/\/$/, "");
+    window.open(`${base}/api/export/${taskId}/markdown`, '_blank');
   };
 
   return (

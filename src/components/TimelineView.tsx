@@ -56,7 +56,7 @@ export function TimelineView({ segments, currentTime, onSegmentClick, taskId }: 
                 <div className="flex-shrink-0">
                   <div className="w-20 h-12 bg-muted rounded overflow-hidden">
                     <img
-                      src={`http://localhost:8000/api/frames/${taskId}/${segment.frameUrl}`}
+                      src={segment.frameUrl}
                       alt={`Frame at ${formatTime(segment.timestamp)}`}
                       className="w-full h-full object-cover"
                       onError={(e) => {
