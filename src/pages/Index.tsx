@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import BackgroundGrid from "@/components/BackgroundGrid";
+import EdgeOrnaments from "@/components/EdgeOrnaments";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Download, Github, Bolt, Users, Brain, Video, Link as LinkIcon, Upload, Sparkles, FileDown, FileText, Image as ImageIcon, ShieldCheck, Languages } from "lucide-react";
 //
@@ -17,7 +18,8 @@ const Index = () => {
   };
 
   return (
-    <div className="relative min-h-screen bg-background">
+    <div className="relative min-h-screen bg-background paper-noise">
+      <EdgeOrnaments />
       <header className="sticky top-0 z-20 backdrop-blur supports-[backdrop-filter]:bg-background/70 border-b">
         <nav className="container mx-auto flex items-center justify-between py-4">
           <a href="/" className="flex items-center gap-2">
@@ -38,7 +40,7 @@ const Index = () => {
       </header>
 
       <main>
-        <section className="relative overflow-hidden">
+        <section className="relative overflow-hidden grid-stripes">
           <BackgroundGrid />
           <div className="container mx-auto relative z-10 py-24 md:py-32 text-center">
             <p className="mb-6 flex items-center justify-center gap-3 text-xs md:text-sm text-primary">
@@ -67,7 +69,7 @@ const Index = () => {
           </div>
         </section>
 
-        <section id="features" className="relative border-t">
+        <section id="features" className="relative border-t grid-stripes">
           <div className="container mx-auto py-12 md:py-16">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
               <article className="rounded-lg border bg-card p-6 shadow-sm hover-scale">
@@ -102,7 +104,7 @@ const Index = () => {
           </div>
         </section>
 
-        <section id="demo" className="relative border-t">
+        <section id="demo" className="relative border-t grid-stripes">
           <div className="container mx-auto py-12 md:py-16">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <article className="rounded-lg border bg-card p-6 shadow-sm">
@@ -130,7 +132,7 @@ const Index = () => {
           </div>
         </section>
 
-        <section id="testimonials" className="relative border-t">
+        <section id="testimonials" className="relative border-t grid-stripes">
           <div className="container mx-auto py-12 md:py-16">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <article className="rounded-lg border bg-card p-6 shadow-sm">
@@ -145,7 +147,7 @@ const Index = () => {
           </div>
         </section>
 
-        <section id="highlights" className="relative border-t">
+        <section id="highlights" className="relative border-t grid-stripes">
           <div className="container mx-auto py-12 md:py-16">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-3 text-sm">
               <div className="rounded-md border bg-card p-3 flex items-center gap-2"><ShieldCheck className="text-primary" /> 专为老师定制</div>
@@ -156,7 +158,7 @@ const Index = () => {
           </div>
         </section>
 
-        <section id="faq" className="relative border-t">
+        <section id="faq" className="relative border-t grid-stripes">
           <div className="container mx-auto py-12 md:py-16">
             <h2 className="text-xl font-semibold">常见问题</h2>
             <div className="mt-4">

@@ -9,7 +9,7 @@ All colors MUST be HSL.
 @layer base {
   :root {
     /* Base surfaces */
-    --background: 0 0% 99%;
+    --background: 42 36% 96%;
     --foreground: 222.2 60% 6%;
 
     --card: 0 0% 100%;
@@ -145,4 +145,55 @@ All colors MUST be HSL.
     .hover-scale:hover { transform: none; }
     .bg-spotlight { background: none; }
   }
+
+  /* Paper texture and ornamental stripes */
+  .paper-noise {
+    background-color: hsl(var(--background));
+    background-image:
+      radial-gradient(hsl(var(--grid-dots) / 0.35) 0.5px, transparent 0.6px),
+      radial-gradient(hsl(var(--grid-dots) / 0.25) 0.5px, transparent 0.6px);
+    background-size: 2px 2px, 3px 3px;
+    background-position: 0 0, 1px 1px;
+  }
+
+  .grid-stripes { position: relative; }
+  .grid-stripes::before,
+  .grid-stripes::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0;
+    height: 56px;
+    pointer-events: none;
+    background-image:
+      linear-gradient(to right, hsl(var(--grid-lines)) 1px, transparent 1px),
+      linear-gradient(to bottom, hsl(var(--grid-lines)) 1px, transparent 1px);
+    background-size: 32px 32px;
+    opacity: .45;
+  }
+  .grid-stripes::before {
+    top: -1px;
+    mask-image: linear-gradient(to bottom, black, transparent);
+    background-position: center;
+  }
+  .grid-stripes::after {
+    bottom: -1px;
+    mask-image: linear-gradient(to top, black, transparent);
+    background-position: 16px 16px;
+    opacity: .35;
+  }
+
+  .edge-ornaments { position: relative; }
+  .edge-ornaments::before,
+  .edge-ornaments::after {
+    content: "";
+    position: absolute;
+    top: 48px; bottom: 48px;
+    width: 1px;
+    background: hsl(var(--grid-lines));
+    opacity: .6;
+    pointer-events: none;
+  }
+  .edge-ornaments::before { left: 16px; }
+  .edge-ornaments::after { right: 16px; }
 }
+
