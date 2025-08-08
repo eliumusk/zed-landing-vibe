@@ -6,7 +6,8 @@ import TestimonialGrid from "@/components/TestimonialGrid";
 import UploadDialog from "@/components/UploadDialog";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Download, Github, Bolt, Users, Brain, Video, Link as LinkIcon, Upload, Sparkles, FileDown, FileText, Image as ImageIcon, ShieldCheck, Languages } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useI18n } from "@/lib/i18n";
 //
 const Index = () => {
   const [openUpload, setOpenUpload] = useState(false);
@@ -21,25 +22,33 @@ const Index = () => {
     offers: { "@type": "Offer", price: "0", priceCurrency: "USD" }
   };
 
+  const { t, lang } = useI18n();
+
+  useEffect(() => {
+    document.title = t("seo.index.title");
+    const ensure = (name: string) => {
+      let el = document.querySelector(`meta[name="${name}"]`);
+      if (!el) {
+        el = document.createElement("meta");
+        el.setAttribute("name", name);
+        document.head.appendChild(el);
+      }
+      return el as HTMLMetaElement;
+    };
+    ensure("description").setAttribute("content", t("seo.index.desc"));
+
+    let link = document.querySelector('link[rel="canonical"]');
+    if (!link) {
+      link = document.createElement("link");
+      link.setAttribute("rel", "canonical");
+      document.head.appendChild(link);
+    }
+    link.setAttribute("href", window.location.origin + "/");
+  }, [t, lang]);
   return (
     <div className="relative min-h-screen bg-background paper-noise">
       <EdgeOrnaments />
-      <header className="sticky top-0 z-20 backdrop-blur supports-[backdrop-filter]:bg-background/70 border-b">
-        <nav className="container mx-auto flex items-center justify-between py-4">
-          <a href="/" className="flex items-center gap-2">
-            <img src={logo} alt="amazing_video2note logo" className="h-7 w-7" loading="lazy" />
-            <span className="text-lg font-semibold tracking-tight text-primary">amazing_video2note</span>
-          </a>
-          <div className="flex items-center gap-3">
-            <a href="#features" className="text-sm text-muted-foreground hover:text-foreground">产品</a>
-            <a href="#demo" className="text-sm text-muted-foreground hover:text-foreground">资源</a>
-            <a href="#faq" className="text-sm text-muted-foreground hover:text-foreground">帮助</a>
-            <Button size="sm" variant="outline" onClick={() => setOpenUpload(true)} aria-label="上传视频">
-              <Upload className="mr-1" /> 上传视频
-            </Button>
-          </div>
-        </nav>
-      </header>
+      {/* Global AppHeader is rendered in App.tsx */}
 
       <UploadDialog open={openUpload} onOpenChange={setOpenUpload} />
 
@@ -54,20 +63,20 @@ const Index = () => {
               <LinkIcon className="h-4 w-4" aria-hidden /> 在线链接
             </p>
             <h1 className="text-4xl md:text-6xl lg:text-7xl leading-tight tracking-tight text-primary animate-enter font-semibold">
-              为老师和创作者打造的AI视频笔记工具
+              {t("hero.title")}
             </h1>
             <p className="mt-6 max-w-2xl mx-auto text-base md:text-lg text-muted-foreground">
-              一键提取PPT、自动生成讲义和知识图片，极致高效，极简体验。
+              {t("hero.subtitle")}
             </p>
 
             <div className="mt-10 flex items-center justify-center gap-4">
               <Button variant="hero" size="lg" className="hover-scale" onClick={() => setOpenUpload(true)}>
-                <Upload /> 上传视频
+                <Upload /> {t("hero.upload")}
                 <Badge variant="secondary" className="ml-1">New</Badge>
               </Button>
               <Button variant="outline" size="lg" className="hover-scale" asChild>
                 <a href="#demo">
-                  <Github className="mr-1" /> 试用Demo
+                  <Github className="mr-1" /> {t("hero.demo")}
                 </a>
               </Button>
             </div>
@@ -80,30 +89,30 @@ const Index = () => {
               <article className="rounded-lg border bg-card p-6 shadow-sm hover-scale">
                 <div className="flex items-center gap-3">
                   <FileText className="text-primary" />
-                  <h3 className="font-medium">PPT智能提取</h3>
+                  <h3 className="font-medium">{t("features.title.1")}</h3>
                 </div>
-                <p className="mt-3 text-sm text-muted-foreground">自动识别视频中的PPT页面，精准导出，节省备课时间。</p>
+                <p className="mt-3 text-sm text-muted-foreground">{t("features.desc.1")}</p>
               </article>
               <article className="rounded-lg border bg-card p-6 shadow-sm hover-scale">
                 <div className="flex items-center gap-3">
                   <Sparkles className="text-primary" />
-                  <h3 className="font-medium">讲义自动生成</h3>
+                  <h3 className="font-medium">{t("features.title.2")}</h3>
                 </div>
-                <p className="mt-3 text-sm text-muted-foreground">AI自动生成结构化讲义，支持一键编辑与美化。</p>
+                <p className="mt-3 text-sm text-muted-foreground">{t("features.desc.2")}</p>
               </article>
               <article className="rounded-lg border bg-card p-6 shadow-sm hover-scale">
                 <div className="flex items-center gap-3">
                   <ImageIcon className="text-primary" />
-                  <h3 className="font-medium">知识图片/卡片</h3>
+                  <h3 className="font-medium">{t("features.title.3")}</h3>
                 </div>
-                <p className="mt-3 text-sm text-muted-foreground">自动生成知识点图片，便于课堂展示和学生复习。</p>
+                <p className="mt-3 text-sm text-muted-foreground">{t("features.desc.3")}</p>
               </article>
               <article className="rounded-lg border bg-card p-6 shadow-sm hover-scale">
                 <div className="flex items-center gap-3">
                   <Bolt className="text-primary" />
-                  <h3 className="font-medium">极速体验</h3>
+                  <h3 className="font-medium">{t("features.title.4")}</h3>
                 </div>
-                <p className="mt-3 text-sm text-muted-foreground">无需注册，极速上传与处理，隐私安全。</p>
+                <p className="mt-3 text-sm text-muted-foreground">{t("features.desc.4")}</p>
               </article>
             </div>
           </div>
@@ -115,23 +124,23 @@ const Index = () => {
               <article className="rounded-lg border bg-card p-6 shadow-sm">
                 <div className="flex items-center gap-3">
                   <Upload className="text-primary" />
-                  <h3 className="font-medium">1. 上传/粘贴视频</h3>
+                  <h3 className="font-medium">{t("steps.1")}</h3>
                 </div>
-                <p className="mt-3 text-sm text-muted-foreground">拖拽或选择文件，或粘贴链接即可开始。</p>
+                <p className="mt-3 text-sm text-muted-foreground">{t("steps.1.desc")}</p>
               </article>
               <article className="rounded-lg border bg-card p-6 shadow-sm">
                 <div className="flex items-center gap-3">
                   <Brain className="text-primary" />
-                  <h3 className="font-medium">2. AI自动处理</h3>
+                  <h3 className="font-medium">{t("steps.2")}</h3>
                 </div>
-                <p className="mt-3 text-sm text-muted-foreground">显示进度，自动识别PPT/生成讲义/提取知识点。</p>
+                <p className="mt-3 text-sm text-muted-foreground">{t("steps.2.desc")}</p>
               </article>
               <article className="rounded-lg border bg-card p-6 shadow-sm">
                 <div className="flex items-center gap-3">
                   <FileDown className="text-primary" />
-                  <h3 className="font-medium">3. 编辑与导出</h3>
+                  <h3 className="font-medium">{t("steps.3")}</h3>
                 </div>
-                <p className="mt-3 text-sm text-muted-foreground">拖拽调整、批量编辑、模板切换；一键导出PDF/Word/图片。</p>
+                <p className="mt-3 text-sm text-muted-foreground">{t("steps.3.desc")}</p>
               </article>
             </div>
           </div>
@@ -146,30 +155,30 @@ const Index = () => {
         <section id="highlights" className="relative border-t grid-stripes">
           <div className="container mx-auto py-12 md:py-16">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-3 text-sm">
-              <div className="rounded-md border bg-card p-3 flex items-center gap-2"><ShieldCheck className="text-primary" /> 专为老师定制</div>
-              <div className="rounded-md border bg-card p-3 flex items-center gap-2"><Sparkles className="text-primary" /> AI自动识别PPT，讲义一键生成</div>
-              <div className="rounded-md border bg-card p-3 flex items-center gap-2"><Languages className="text-primary" /> 支持多语言</div>
-              <div className="rounded-md border bg-card p-3 flex items-center gap-2"><ShieldCheck className="text-primary" /> 极速体验 · 隐私安全</div>
+              <div className="rounded-md border bg-card p-3 flex items-center gap-2"><ShieldCheck className="text-primary" /> {t("high.1")}</div>
+              <div className="rounded-md border bg-card p-3 flex items-center gap-2"><Sparkles className="text-primary" /> {t("high.2")}</div>
+              <div className="rounded-md border bg-card p-3 flex items-center gap-2"><Languages className="text-primary" /> {t("high.3")}</div>
+              <div className="rounded-md border bg-card p-3 flex items-center gap-2"><ShieldCheck className="text-primary" /> {t("high.4")}</div>
             </div>
           </div>
         </section>
 
         <section id="faq" className="relative border-t grid-stripes">
           <div className="container mx-auto py-12 md:py-16">
-            <h2 className="text-xl font-semibold">常见问题</h2>
+            <h2 className="text-xl font-semibold">{t("faq.title")}</h2>
             <div className="mt-4">
               <Accordion type="single" collapsible className="w-full">
                 <AccordionItem value="item-1">
-                  <AccordionTrigger>支持哪些平台？</AccordionTrigger>
-                  <AccordionContent>支持本地文件与在线链接（YouTube/B站/抖音等），此页面以通用图标呈现。</AccordionContent>
+                  <AccordionTrigger>{t("faq.q1")}</AccordionTrigger>
+                  <AccordionContent>{t("faq.a1")}</AccordionContent>
                 </AccordionItem>
                 <AccordionItem value="item-2">
-                  <AccordionTrigger>是否需要注册？</AccordionTrigger>
-                  <AccordionContent>无需注册即可体验核心流程，专业功能可在登录后解锁。</AccordionContent>
+                  <AccordionTrigger>{t("faq.q2")}</AccordionTrigger>
+                  <AccordionContent>{t("faq.a2")}</AccordionContent>
                 </AccordionItem>
                 <AccordionItem value="item-3">
-                  <AccordionTrigger>我的数据是否安全？</AccordionTrigger>
-                  <AccordionContent>采用最小化保留策略与可控存储，支持本地导出与删除。</AccordionContent>
+                  <AccordionTrigger>{t("faq.q3")}</AccordionTrigger>
+                  <AccordionContent>{t("faq.a3")}</AccordionContent>
                 </AccordionItem>
               </Accordion>
             </div>
@@ -179,7 +188,7 @@ const Index = () => {
 
       <footer className="border-t">
         <div className="container mx-auto py-8 text-center text-sm text-muted-foreground">
-          <p>© {new Date().getFullYear()} amazing_video2note. 仅用于设计演示。</p>
+          <p>© {new Date().getFullYear()} {t("brand.name")} · {t("footer.copyright")}</p>
         </div>
       </footer>
 

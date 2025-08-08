@@ -10,10 +10,12 @@ import { MarkdownRenderer } from "@/components/MarkdownRenderer";
 import { getExportMarkdownUrl, getResults, getStatus, getMarkdownContent, saveMarkdownContent } from "@/lib/api";
 import { ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
+import { useI18n } from "@/lib/i18n";
 
 export default function Result() {
   const { taskId } = useParams<{ taskId: string }>();
   const nav = useNavigate();
+  const { t, lang } = useI18n();
   const [currentVideoTime, setCurrentVideoTime] = useState(0);
 
   // Throttled video time update to prevent excessive re-renders
@@ -28,13 +30,26 @@ export default function Result() {
   }, []);
 
   useEffect(() => {
-    document.title = taskId ? `视频处理结果 · ${taskId}` : "视频处理结果";
-    const link = document.createElement("link");
+    document.title = taskId ? `${t("result.title")} · ${taskId}` : t("result.title");
+
+    const ensure = (name: string) => {
+      let el = document.querySelector(`meta[name="${name}"]`);
+      if (!el) {
+        el = document.createElement("meta");
+        el.setAttribute("name", name);
+        document.head.appendChild(el);
+      }
+      return el as HTMLMetaElement;
+    };
+    ensure("description").setAttribute("content", t("seo.result.desc"));
+
+    const link = document.querySelector('link[rel="canonical"]') || document.createElement("link");
     link.setAttribute("rel", "canonical");
     link.setAttribute("href", window.location.href);
-    document.head.appendChild(link);
-    return () => { document.head.removeChild(link); };
-  }, [taskId]);
+    if (!link.parentElement) document.head.appendChild(link);
+
+    return () => { /* keep canonical */ };
+  }, [taskId, t, lang]);
 
   const statusQuery = useQuery({
     queryKey: ["status", taskId],
@@ -58,7 +73,7 @@ export default function Result() {
     enabled: !!taskId && statusQuery.data?.status === "completed",
   });
 
-  const s = statusQuery.data;
+  const s = statusQuery.data as any;
   const progress = Math.round(((s?.progress || 0) * 100));
 
   // 处理时间轴数据（从后端 results.results.multimodal_notes 读取，并兼容多种结构）
@@ -115,10 +130,10 @@ export default function Result() {
   const handleMarkdownChange = async (content: string) => {
     try {
       await saveMarkdownContent(taskId!, content);
-      toast.success("笔记保存成功");
+      toast.success(t("toast.save.ok"));
     } catch (error) {
       console.error("Failed to save markdown:", error);
-      toast.error("保存失败，请重试");
+      toast.error(t("toast.save.fail"));
     }
   };
 
@@ -134,11 +149,11 @@ export default function Result() {
             className="flex items-center gap-2"
           >
             <ArrowLeft className="w-4 h-4" />
-            返回
+            {t("result.back")}
           </Button>
           <div>
-            <h1 className="text-2xl font-semibold">视频处理结果</h1>
-            <p className="text-sm text-muted-foreground">任务ID: {taskId}</p>
+            <h1 className="text-2xl font-semibold">{t("result.title")}</h1>
+            <p className="text-sm text-muted-foreground">{t("result.task")}: {taskId}</p>
           </div>
         </div>
       </div>
@@ -148,8 +163,8 @@ export default function Result() {
         <Card className="mb-6">
           <CardContent className="pt-6">
             <div className="flex items-center justify-between text-sm mb-3">
-              <p>当前状态：<span className="font-medium">{s?.status || "加载中"}</span></p>
-              <p className="text-muted-foreground">步骤：{s?.current_step || "-"}</p>
+              <p>{t("result.status")}：<span className="font-medium">{s?.status || "-"}</span></p>
+              <p className="text-muted-foreground">{t("result.step")}：{s?.current_step || "-"}</p>
             </div>
             <Progress value={isNaN(progress) ? 0 : progress} />
           </CardContent>
@@ -171,7 +186,7 @@ export default function Result() {
             
             <Card className="flex-1">
               <CardHeader>
-                <CardTitle>时间轴导航</CardTitle>
+                <CardTitle>{t("result.timeline")}</CardTitle>
               </CardHeader>
               <CardContent>
                 <TimelineView
@@ -187,7 +202,7 @@ export default function Result() {
           {/* 右侧：Markdown渲染 */}
           <div className="h-full">
             <MarkdownRenderer
-              content={markdownQuery.data || "正在加载笔记内容..."}
+              content={markdownQuery.data || t("result.notes.loading")}
               onContentChange={handleMarkdownChange}
               taskId={taskId!}
               isEditable={true}
@@ -198,7 +213,7 @@ export default function Result() {
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-            <p className="text-muted-foreground">正在处理视频，请稍候...</p>
+            <p className="text-muted-foreground">{t("result.loading")}</p>
           </div>
         </div>
       )}
