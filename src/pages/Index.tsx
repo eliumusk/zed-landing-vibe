@@ -3,10 +3,13 @@ import { Badge } from "@/components/ui/badge";
 import BackgroundGrid from "@/components/BackgroundGrid";
 import EdgeOrnaments from "@/components/EdgeOrnaments";
 import TestimonialGrid from "@/components/TestimonialGrid";
+import UploadDialog from "@/components/UploadDialog";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Download, Github, Bolt, Users, Brain, Video, Link as LinkIcon, Upload, Sparkles, FileDown, FileText, Image as ImageIcon, ShieldCheck, Languages } from "lucide-react";
+import { useState } from "react";
 //
 const Index = () => {
+  const [openUpload, setOpenUpload] = useState(false);
   const logo = "/lovable-uploads/1a269a26-9009-4b73-80c2-654445d2810b.png";
   const jsonLd = {
     "@context": "https://schema.org",
@@ -31,14 +34,15 @@ const Index = () => {
             <a href="#features" className="text-sm text-muted-foreground hover:text-foreground">产品</a>
             <a href="#demo" className="text-sm text-muted-foreground hover:text-foreground">资源</a>
             <a href="#faq" className="text-sm text-muted-foreground hover:text-foreground">帮助</a>
-            <Button size="sm" variant="outline" asChild>
-              <a href="#upload" aria-label="上传视频">
-                <Upload className="mr-1" /> 上传视频
-              </a>
+            <Button size="sm" variant="outline" onClick={() => setOpenUpload(true)} aria-label="上传视频">
+              <Upload className="mr-1" /> 上传视频
             </Button>
           </div>
         </nav>
       </header>
+
+      <UploadDialog open={openUpload} onOpenChange={setOpenUpload} />
+
 
       <main>
         <section className="relative overflow-hidden grid-stripes">
@@ -57,7 +61,7 @@ const Index = () => {
             </p>
 
             <div className="mt-10 flex items-center justify-center gap-4">
-              <Button id="upload" variant="hero" size="lg" className="hover-scale">
+              <Button variant="hero" size="lg" className="hover-scale" onClick={() => setOpenUpload(true)}>
                 <Upload /> 上传视频
                 <Badge variant="secondary" className="ml-1">New</Badge>
               </Button>
