@@ -43,6 +43,10 @@ export async function getResults(taskId: string) {
   return apiFetch<any>(`/api/results/${encodeURIComponent(taskId)}`);
 }
 
+export async function getMarkdownContent(taskId: string) {
+  return apiFetch<string>(`/api/export/${encodeURIComponent(taskId)}/markdown?format=text`);
+}
+
 export function getExportMarkdownUrl(taskId: string) {
   // Return full URL for direct download
   const base = (typeof window !== 'undefined' ? (window.localStorage.getItem('apiBaseUrl') || 'http://localhost:8000') : 'http://localhost:8000').replace(/\/$/, "");
