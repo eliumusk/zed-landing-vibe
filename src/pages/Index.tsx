@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import BackgroundGrid from "@/components/BackgroundGrid";
 import EdgeOrnaments from "@/components/EdgeOrnaments";
+import TestimonialGrid from "@/components/TestimonialGrid";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Download, Github, Bolt, Users, Brain, Video, Link as LinkIcon, Upload, Sparkles, FileDown, FileText, Image as ImageIcon, ShieldCheck, Languages } from "lucide-react";
 //
@@ -134,16 +135,7 @@ const Index = () => {
 
         <section id="testimonials" className="relative border-t grid-stripes">
           <div className="container mx-auto py-12 md:py-16">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <article className="rounded-lg border bg-card p-6 shadow-sm">
-                <p className="text-sm text-muted-foreground">“备课效率提升3倍，学生反馈超好！”</p>
-                <p className="mt-2 text-xs text-muted-foreground">— XX老师</p>
-              </article>
-              <article className="rounded-lg border bg-card p-6 shadow-sm">
-                <p className="text-sm text-muted-foreground">“一键生成讲义，省时省力。”</p>
-                <p className="mt-2 text-xs text-muted-foreground">— 内容创作者</p>
-              </article>
-            </div>
+            <TestimonialGrid />
           </div>
         </section>
 
