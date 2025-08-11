@@ -8,6 +8,7 @@ import { VideoPlayer } from "@/components/VideoPlayer";
 import { TimelineView } from "@/components/TimelineView";
 import { MarkdownRenderer } from "@/components/MarkdownRenderer";
 import { getExportMarkdownUrl, getResults, getStatus, getMarkdownContent, saveMarkdownContent } from "@/lib/api";
+import { AgentAssistant } from "@/components/AgentAssistant";
 import { ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
 import { useI18n } from "@/lib/i18n";
@@ -217,6 +218,7 @@ export default function Result() {
           </div>
         </div>
       )}
+      <AgentAssistant taskId={taskId!} />
     </main>
   );
 }
