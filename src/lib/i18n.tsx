@@ -80,6 +80,17 @@ const zh: Dict = {
   "url.preview.fail": "预览失败，请稍后重试",
   "url.start.ok": "下载任务已启动",
   "url.start.fail": "启动失败，请重试",
+
+  "notes.image.tools": "图片管理与裁剪",
+  "notes.image.none": "未检测到图片",
+  "notes.image.untitled": "未命名图片",
+  "notes.image.crop": "裁剪并嵌入Base64",
+  "notes.crop.title": "裁剪图片",
+  "notes.crop.zoom": "缩放",
+  "notes.crop.cancel": "取消",
+  "notes.crop.apply": "应用裁剪",
+  "notes.crop.error": "裁剪失败，请重试",
+  "notes.image.load.error": "图片加载失败，请检查链接或跨域设置"
 };
 
 const en: Dict = {
@@ -148,6 +159,17 @@ const en: Dict = {
   "url.preview.fail": "Preview failed, try again later",
   "url.start.ok": "Download started",
   "url.start.fail": "Start failed, please retry",
+
+  "notes.image.tools": "Image Manager & Crop",
+  "notes.image.none": "No images detected",
+  "notes.image.untitled": "Untitled image",
+  "notes.image.crop": "Crop and embed Base64",
+  "notes.crop.title": "Crop Image",
+  "notes.crop.zoom": "Zoom",
+  "notes.crop.cancel": "Cancel",
+  "notes.crop.apply": "Apply Crop",
+  "notes.crop.error": "Cropping failed, please retry",
+  "notes.image.load.error": "Failed to load image. Check URL/CORS"
 };
 
 const dicts: Record<Lang, Dict> = { zh, en };

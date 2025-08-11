@@ -6,7 +6,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Edit3, Eye, Download, FileText } from "lucide-react";
+import { Edit3, Eye, Download, FileText, Images } from "lucide-react";
+import { MarkdownImageManager } from "./MarkdownImageManager";
+import { useI18n } from "@/lib/i18n";
 
 interface MarkdownRendererProps {
   content: string;
@@ -21,8 +23,10 @@ export function MarkdownRenderer({
   taskId,
   isEditable = true
 }: MarkdownRendererProps) {
+  const { t } = useI18n();
   const [editedContent, setEditedContent] = useState(content);
   const [activeTab, setActiveTab] = useState<"preview" | "edit">("preview");
+  const [imageMgrOpen, setImageMgrOpen] = useState(false);
 
   useEffect(() => {
     setEditedContent(content);
@@ -38,11 +42,36 @@ export function MarkdownRenderer({
     window.open(`${base}/api/export/${taskId}/markdown`, '_blank');
   };
 
-  const handlePdfExport = () => {
-    const base = getApiBaseUrl().replace(/\/$/, "");
-    window.open(`${base}/api/export/${taskId}/pdf`, '_blank');
-  };
+  const handlePdfExport = async () => {
+    try {
+      const base = getApiBaseUrl().replace(/\/$/, "");
+      const url = `${base}/api/export/${taskId}/pdf`;
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const blob = await res.blob();
+      const dlUrl = URL.createObjectURL(blob);
 
+      // Try to parse filename from Content-Disposition
+      const cd = res.headers.get('content-disposition') || '';
+      const m = cd.match(/filename\*=UTF-8''([^;\n]+)|filename="?([^";\n]+)"?/i);
+      const filename = decodeURIComponent((m?.[1] || m?.[2] || `video_notes_${taskId}.pdf`).trim());
+
+      const a = document.createElement('a');
+      a.href = dlUrl;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(dlUrl);
+    } catch (err) {
+      console.error('PDF export failed', err);
+      // Fallback open
+      try {
+        const base = getApiBaseUrl().replace(/\/$/, "");
+        window.open(`${base}/api/export/${taskId}/pdf`, '_blank');
+      } catch {}
+    }
+  };
   return (
     <Card className="h-full flex flex-col">
       <CardHeader className="flex-shrink-0">
@@ -108,27 +137,40 @@ export function MarkdownRenderer({
             </TabsContent>
 
             <TabsContent value="edit" className="flex-1 min-h-0 mt-0 flex flex-col gap-2">
+              <div className="flex items-center justify-between">
+                <Button variant="outline" size="sm" className="flex items-center gap-1" onClick={() => setImageMgrOpen(true)}>
+                  <Images className="w-3 h-3" /> {t("notes.image.tools")}
+                </Button>
+                <div className="flex justify-end gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      setEditedContent(content);
+                      setActiveTab("preview");
+                    }}
+                  >
+                    取消
+                  </Button>
+                  <Button size="sm" onClick={handleSave}>
+                    保存更改
+                  </Button>
+                </div>
+              </div>
               <Textarea
                 value={editedContent}
                 onChange={(e) => setEditedContent(e.target.value)}
                 placeholder="编辑您的笔记..."
                 className="flex-1 min-h-0 resize-none font-mono text-xs"
               />
-              <div className="flex justify-end gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => {
-                    setEditedContent(content);
-                    setActiveTab("preview");
-                  }}
-                >
-                  取消
-                </Button>
-                <Button size="sm" onClick={handleSave}>
-                  保存更改
-                </Button>
-              </div>
+
+              {/* Image tools dialog */}
+              <MarkdownImageManager
+                open={imageMgrOpen}
+                onOpenChange={setImageMgrOpen}
+                markdown={editedContent}
+                onReplace={(md) => setEditedContent(md)}
+              />
             </TabsContent>
           </Tabs>
         ) : (
