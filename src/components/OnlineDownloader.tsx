@@ -7,7 +7,7 @@ import { useI18n } from "@/lib/i18n";
 import { previewVideo, downloadFromUrl, getDownloadStatus, DownloadStatusResponse } from "@/lib/api";
 import { toast } from "sonner";
 import { Link } from "react-router-dom";
-import { Image as ImageIcon, Play, Link as LinkIcon } from "lucide-react";
+import { Image as ImageIcon, Play, Link as LinkIcon, Loader2 } from "lucide-react";
 
 export default function OnlineDownloader() {
   const { t } = useI18n();
@@ -29,6 +29,9 @@ export default function OnlineDownloader() {
   const overallProgress = useMemo(() => Math.round(((status?.progress ?? 0) * 100)), [status]);
   const downloadProgress = useMemo(() => Math.round(((status?.download_progress ?? 0) * 100)), [status]);
   const processingProgress = useMemo(() => Math.round(((status?.processing_progress ?? 0) * 100)), [status]);
+
+  const isActive = status?.status === "downloading" || status?.status === "processing";
+  const hasProgress = overallProgress > 0 || downloadProgress > 0 || processingProgress > 0 || status?.status === "completed";
 
   useEffect(() => {
     if (!taskId) return;
@@ -132,26 +135,35 @@ export default function OnlineDownloader() {
             {status && (
               <div className="mt-2 space-y-3">
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-muted-foreground">{t("url.progress")}</span>
-                  <span className="font-medium">{overallProgress}%</span>
+                  <span className="text-muted-foreground flex items-center gap-2">
+                    {t("url.progress")}
+                    {isActive && (
+                      <Loader2 className="w-4 h-4 animate-spin text-primary" aria-label="loading" />
+                    )}
+                  </span>
+                  <span className="font-medium">{hasProgress ? (isNaN(overallProgress) ? 0 : overallProgress) + "%" : "--"}</span>
                 </div>
-                <Progress value={isNaN(overallProgress) ? 0 : overallProgress} />
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs text-muted-foreground">
-                  <div>
-                    <div className="flex items-center justify-between mb-1">
-                      <span>{t("url.progress.download")}</span>
-                      <span>{isNaN(downloadProgress) ? 0 : downloadProgress}%</span>
+                {hasProgress && (
+                  <>
+                    <Progress value={isNaN(overallProgress) ? 0 : overallProgress} />
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs text-muted-foreground">
+                      <div>
+                        <div className="flex items-center justify-between mb-1">
+                          <span>{t("url.progress.download")}</span>
+                          <span>{isNaN(downloadProgress) ? 0 : downloadProgress}%</span>
+                        </div>
+                        <Progress value={isNaN(downloadProgress) ? 0 : downloadProgress} />
+                      </div>
+                      <div>
+                        <div className="flex items-center justify-between mb-1">
+                          <span>{t("url.progress.processing")}</span>
+                          <span>{isNaN(processingProgress) ? 0 : processingProgress}%</span>
+                        </div>
+                        <Progress value={isNaN(processingProgress) ? 0 : processingProgress} />
+                      </div>
                     </div>
-                    <Progress value={isNaN(downloadProgress) ? 0 : downloadProgress} />
-                  </div>
-                  <div>
-                    <div className="flex items-center justify-between mb-1">
-                      <span>{t("url.progress.processing")}</span>
-                      <span>{isNaN(processingProgress) ? 0 : processingProgress}%</span>
-                    </div>
-                    <Progress value={isNaN(processingProgress) ? 0 : processingProgress} />
-                  </div>
-                </div>
+                  </>
+                )}
 
                 {status.status === "completed" && taskId && (
                   <div className="pt-2">
