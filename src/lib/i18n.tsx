@@ -66,7 +66,20 @@ const zh: Dict = {
 
   "seo.index.title": "amazing_video2note | AI视频笔记工具",
   "seo.index.desc": "AI 视频笔记工具：一键提取PPT、自动生成讲义和知识图片，极致高效，极简体验。",
-  "seo.result.desc": "查看并编辑由AI生成的视频讲义与时间轴笔记。"
+  "seo.result.desc": "查看并编辑由AI生成的视频讲义与时间轴笔记。",
+
+  "url.input.label": "视频链接",
+  "url.input.placeholder": "粘贴视频链接（支持 YouTube/B站/抖音 等）",
+  "url.preview": "预览",
+  "url.start": "解析并下载",
+  "url.progress": "进度",
+  "url.progress.download": "下载",
+  "url.progress.processing": "处理",
+  "url.viewResult": "查看结果",
+  "url.invalid": "请输入有效的链接",
+  "url.preview.fail": "预览失败，请稍后重试",
+  "url.start.ok": "下载任务已启动",
+  "url.start.fail": "启动失败，请重试",
 };
 
 const en: Dict = {
@@ -121,7 +134,20 @@ const en: Dict = {
 
   "seo.index.title": "amazing_video2note | AI Video Notes Tool",
   "seo.index.desc": "Extract slides, auto-generate handouts and knowledge images. Super efficient, minimal UI.",
-  "seo.result.desc": "View and edit AI-generated handouts and timeline notes."
+  "seo.result.desc": "View and edit AI-generated handouts and timeline notes.",
+
+  "url.input.label": "Video URL",
+  "url.input.placeholder": "Paste a video URL (YouTube/Bilibili/TikTok, etc.)",
+  "url.preview": "Preview",
+  "url.start": "Parse & Download",
+  "url.progress": "Progress",
+  "url.progress.download": "Download",
+  "url.progress.processing": "Processing",
+  "url.viewResult": "View Result",
+  "url.invalid": "Please enter a valid URL",
+  "url.preview.fail": "Preview failed, try again later",
+  "url.start.ok": "Download started",
+  "url.start.fail": "Start failed, please retry",
 };
 
 const dicts: Record<Lang, Dict> = { zh, en };

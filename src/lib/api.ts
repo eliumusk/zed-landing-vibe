@@ -65,3 +65,44 @@ export function getExportPdfUrl(taskId: string) {
   const base = (typeof window !== 'undefined' ? (window.localStorage.getItem('apiBaseUrl') || 'http://localhost:8000') : 'http://localhost:8000').replace(/\/$/, "");
   return `${base}/api/export/${encodeURIComponent(taskId)}/pdf`;
 }
+
+// New endpoints for online video download & preview
+export type DownloadStartResponse = {
+  task_id: string;
+  platform?: string;
+  title?: string;
+  message?: string;
+  estimated_duration?: number;
+};
+
+export type DownloadStatusResponse = {
+  task_id: string;
+  status: "downloading" | "processing" | "completed" | "failed";
+  progress?: number; // overall 0..1
+  download_progress?: number; // 0..1
+  processing_progress?: number; // 0..1
+  platform?: string;
+  title?: string;
+  error_message?: string | null;
+};
+
+export async function previewVideo(url: string) {
+  return apiFetch<{ platform?: string; title?: string; duration?: number; thumbnail?: string; uploader?: string; view_count?: number }>(
+    "/api/preview-video",
+    {
+      method: "POST",
+      body: JSON.stringify({ url }),
+    }
+  );
+}
+
+export async function downloadFromUrl(params: { url: string; quality?: "low" | "medium" | "high"; platform?: string }) {
+  return apiFetch<DownloadStartResponse>("/api/download-url", {
+    method: "POST",
+    body: JSON.stringify({ quality: "medium", ...params }),
+  });
+}
+
+export async function getDownloadStatus(taskId: string) {
+  return apiFetch<DownloadStatusResponse>(`/api/download-status/${encodeURIComponent(taskId)}`);
+}

@@ -8,7 +8,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Download, Github, Bolt, Users, Brain, Video, Link as LinkIcon, Upload, Sparkles, FileDown, FileText, Image as ImageIcon, ShieldCheck, Languages } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useI18n } from "@/lib/i18n";
-//
+import OnlineDownloader from "@/components/OnlineDownloader";
 const Index = () => {
   const [openUpload, setOpenUpload] = useState(false);
   const logo = "/lovable-uploads/1a269a26-9009-4b73-80c2-654445d2810b.png";
@@ -79,6 +79,11 @@ const Index = () => {
                   <Github className="mr-1" /> {t("hero.demo")}
                 </a>
               </Button>
+            </div>
+
+            {/* Online video URL downloader */}
+            <div className="container mx-auto max-w-3xl">
+              <OnlineDownloader />
             </div>
           </div>
         </section>
