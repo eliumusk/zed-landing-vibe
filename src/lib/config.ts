@@ -3,7 +3,7 @@ export function getApiBaseUrl(): string {
     const stored = window.localStorage.getItem("apiBaseUrl");
     if (stored) return stored;
   }
-  return "http://localhost:8000";
+  return "http://49.233.207.217:8000";
 }
 
 export function setApiBaseUrl(url: string) {

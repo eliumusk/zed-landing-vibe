@@ -90,8 +90,8 @@ export default function Result() {
       : (notesObj?.segments || []);
 
     const base = (typeof window !== 'undefined'
-      ? (window.localStorage.getItem('apiBaseUrl') || 'http://localhost:8000')
-      : 'http://localhost:8000').replace(/\/$/, "");
+      ? (window.localStorage.getItem('apiBaseUrl') || 'http://49.233.207.217:8000')
+      : 'http://49.233.207.217:8000').replace(/\/$/, "");
 
     return segments.map((seg, index) => {
       // 计算开始时间（秒），接口里是字符串，需要解析
