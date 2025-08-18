@@ -14,8 +14,6 @@ export type ProcessParams = {
 export type StatusResponse = {
   task_id: string;
   status: "pending" | "processing" | "completed" | "failed";
-  current_step?: string;
-  progress?: number; // 0..1
   created_at?: string;
 };
 
@@ -56,13 +54,13 @@ export async function saveMarkdownContent(taskId: string, content: string) {
 
 export function getExportMarkdownUrl(taskId: string) {
   // Return full URL for direct download
-  const base = (typeof window !== 'undefined' ? (window.localStorage.getItem('apiBaseUrl') || 'http://49.233.207.217:8000') : 'http://49.233.207.217:8000').replace(/\/$/, "");
+  const base = (typeof window !== 'undefined' ? (window.localStorage.getItem('apiBaseUrl') || 'http://localhost:8000') : 'http://localhost:8000').replace(/\/$/, "");
   return `${base}/api/export/${encodeURIComponent(taskId)}/markdown`;
 }
 
 export function getExportPdfUrl(taskId: string) {
   // Return full URL for direct download
-  const base = (typeof window !== 'undefined' ? (window.localStorage.getItem('apiBaseUrl') || 'http://49.233.207.217:8000') : 'http://49.233.207.217:8000').replace(/\/$/, "");
+  const base = (typeof window !== 'undefined' ? (window.localStorage.getItem('apiBaseUrl') || 'http://localhost:8000') : 'http://localhost:8000').replace(/\/$/, "");
   return `${base}/api/export/${encodeURIComponent(taskId)}/pdf`;
 }
 
@@ -78,9 +76,6 @@ export type DownloadStartResponse = {
 export type DownloadStatusResponse = {
   task_id: string;
   status: "downloading" | "processing" | "completed" | "failed";
-  progress?: number; // overall 0..1
-  download_progress?: number; // 0..1
-  processing_progress?: number; // 0..1
   platform?: string;
   title?: string;
   error_message?: string | null;

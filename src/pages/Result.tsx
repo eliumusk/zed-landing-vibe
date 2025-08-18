@@ -3,18 +3,20 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
+
 import { VideoPlayer } from "@/components/VideoPlayer";
 import { TimelineView } from "@/components/TimelineView";
 import { MarkdownRenderer } from "@/components/MarkdownRenderer";
-import { getExportMarkdownUrl, getResults, getStatus, getMarkdownContent, saveMarkdownContent } from "@/lib/api";
+import { getResults, getStatus, getMarkdownContent, saveMarkdownContent } from "@/lib/api";
 import { AgentAssistant } from "@/components/AgentAssistant";
 import { ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
 import { useI18n } from "@/lib/i18n";
 
 export default function Result() {
-  const { taskId } = useParams<{ taskId: string }>();
+  const { taskId: routerTaskId } = useParams<{ taskId: string }>();
+  // 临时修复：手动提取taskId
+  const taskId = routerTaskId || window.location.pathname.split('/').pop();
   const nav = useNavigate();
   const { t, lang } = useI18n();
   const [currentVideoTime, setCurrentVideoTime] = useState(0);
@@ -56,11 +58,15 @@ export default function Result() {
     queryKey: ["status", taskId],
     queryFn: () => getStatus(taskId!),
     enabled: !!taskId,
+    retry: 3,
     refetchInterval: (q) => {
       const s = q.state.data as any;
-      return s && (s.status === "completed" || s.status === "failed") ? false : 2000;
+      // 只有在成功获取到completed或failed状态时才停止轮询
+      return (s && (s.status === "completed" || s.status === "failed")) ? false : 5000;
     },
   });
+
+
 
   const resultsQuery = useQuery({
     queryKey: ["results", taskId],
@@ -75,7 +81,6 @@ export default function Result() {
   });
 
   const s = statusQuery.data as any;
-  const progress = Math.round(((s?.progress || 0) * 100));
 
   // 处理时间轴数据（从后端 results.results.multimodal_notes 读取，并兼容多种结构）
   const timelineSegments = useMemo(() => {
@@ -90,8 +95,8 @@ export default function Result() {
       : (notesObj?.segments || []);
 
     const base = (typeof window !== 'undefined'
-      ? (window.localStorage.getItem('apiBaseUrl') || 'http://49.233.207.217:8000')
-      : 'http://49.233.207.217:8000').replace(/\/$/, "");
+      ? (window.localStorage.getItem('apiBaseUrl') || 'http://localhost:8000')
+      : 'http://localhost:8000').replace(/\/$/, "");
 
     return segments.map((seg, index) => {
       // 计算开始时间（秒），接口里是字符串，需要解析
@@ -163,11 +168,14 @@ export default function Result() {
       {s?.status !== "completed" && (
         <Card className="mb-6">
           <CardContent className="pt-6">
-            <div className="flex items-center justify-between text-sm mb-3">
-              <p>{t("result.status")}：<span className="font-medium">{s?.status || "-"}</span></p>
-              <p className="text-muted-foreground">{t("result.step")}：{s?.current_step || "-"}</p>
+            <div className="text-center">
+              <p className="text-lg font-medium mb-2">{t("result.status")}：{s?.status || "-"}</p>
+              <p className="text-muted-foreground">
+                {s?.status === "processing" ? "视频处理中，请稍候..." :
+                 s?.status === "pending" ? "任务等待处理中..." :
+                 s?.status === "failed" ? "处理失败" : "处理中..."}
+              </p>
             </div>
-            <Progress value={isNaN(progress) ? 0 : progress} />
           </CardContent>
         </Card>
       )}
