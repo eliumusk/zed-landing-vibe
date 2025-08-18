@@ -3,19 +3,18 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-
 import { VideoPlayer } from "@/components/VideoPlayer";
 import { TimelineView } from "@/components/TimelineView";
 import { MarkdownRenderer } from "@/components/MarkdownRenderer";
 import { getResults, getStatus, getMarkdownContent, saveMarkdownContent } from "@/lib/api";
 import { AgentAssistant } from "@/components/AgentAssistant";
+import { SubtitleDisplay } from "@/components/SubtitleDisplay";
 import { ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
 import { useI18n } from "@/lib/i18n";
 
 export default function Result() {
   const { taskId: routerTaskId } = useParams<{ taskId: string }>();
-  // 临时修复：手动提取taskId
   const taskId = routerTaskId || window.location.pathname.split('/').pop();
   const nav = useNavigate();
   const { t, lang } = useI18n();
@@ -80,7 +79,7 @@ export default function Result() {
     enabled: !!taskId && statusQuery.data?.status === "completed",
   });
 
-  const s = statusQuery.data as any;
+
 
   // 处理时间轴数据（从后端 results.results.multimodal_notes 读取，并兼容多种结构）
   const timelineSegments = useMemo(() => {
@@ -164,68 +163,49 @@ export default function Result() {
         </div>
       </div>
 
-      {/* 处理状态 */}
-      {s?.status !== "completed" && (
-        <Card className="mb-6">
-          <CardContent className="pt-6">
-            <div className="text-center">
-              <p className="text-lg font-medium mb-2">{t("result.status")}：{s?.status || "-"}</p>
-              <p className="text-muted-foreground">
-                {s?.status === "processing" ? "视频处理中，请稍候..." :
-                 s?.status === "pending" ? "任务等待处理中..." :
-                 s?.status === "failed" ? "处理失败" : "处理中..."}
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
       {/* 主内容区域 */}
-      {statusQuery.data?.status === "completed" ? (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-[calc(100vh-200px)]">
-          {/* 左侧：视频播放器 + 时间轴 */}
-          <div className="space-y-6">
-            {taskId && (
-              <VideoPlayer
-                taskId={taskId}
-                currentTime={currentVideoTime}
-                onTimeUpdate={handleVideoTimeUpdate}
-              />
-            )}
-            
-            <Card className="flex-1">
-              <CardHeader>
-                <CardTitle>{t("result.timeline")}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <TimelineView
-                  segments={timelineSegments}
-                  currentTime={currentVideoTime}
-                  onSegmentClick={handleSegmentClick}
-                  taskId={taskId!}
-                />
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* 右侧：Markdown渲染 */}
-          <div className="h-full">
-            <MarkdownRenderer
-              content={markdownQuery.data || t("result.notes.loading")}
-              onContentChange={handleMarkdownChange}
-              taskId={taskId!}
-              isEditable={true}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-[calc(100vh-200px)]">
+        {/* 左侧：视频播放器 + 字幕 + 时间轴 */}
+        <div className="space-y-4">
+          {taskId && (
+            <VideoPlayer
+              taskId={taskId}
+              currentTime={currentVideoTime}
+              onTimeUpdate={handleVideoTimeUpdate}
             />
-          </div>
+          )}
+
+          {/* 字幕显示区域 - 可折叠 */}
+          <SubtitleDisplay
+            taskId={taskId!}
+            currentTime={currentVideoTime}
+          />
+
+          <Card className="flex-1">
+            <CardHeader>
+              <CardTitle>{t("result.timeline")}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <TimelineView
+                segments={timelineSegments}
+                currentTime={currentVideoTime}
+                onSegmentClick={handleSegmentClick}
+                taskId={taskId!}
+              />
+            </CardContent>
+          </Card>
         </div>
-      ) : (
-        <div className="flex items-center justify-center h-64">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-            <p className="text-muted-foreground">{t("result.loading")}</p>
-          </div>
+
+        {/* 右侧：Markdown渲染 */}
+        <div className="h-full">
+          <MarkdownRenderer
+            content={markdownQuery.data || t("result.notes.loading")}
+            onContentChange={handleMarkdownChange}
+            taskId={taskId!}
+            isEditable={true}
+          />
         </div>
-      )}
+      </div>
       <AgentAssistant taskId={taskId!} />
     </main>
   );
