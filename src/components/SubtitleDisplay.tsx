@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -68,11 +68,6 @@ export function SubtitleDisplay({ taskId, currentTime }: SubtitleDisplayProps) {
     const secs = seconds % 60;
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
-
-  // 如果没有字幕数据，不显示组件
-  if (!subtitles.length) {
-    return null;
-  }
 
   return (
     <Collapsible open={isOpen} onOpenChange={setIsOpen}>

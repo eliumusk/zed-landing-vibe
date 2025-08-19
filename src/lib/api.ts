@@ -101,3 +101,9 @@ export async function downloadFromUrl(params: { url: string; quality?: "low" | "
 export async function getDownloadStatus(taskId: string) {
   return apiFetch<DownloadStatusResponse>(`/api/download-status/${encodeURIComponent(taskId)}`);
 }
+
+// 流式摘要API
+export function getStreamSummaryUrl(taskId: string) {
+  const base = (typeof window !== 'undefined' ? (window.localStorage.getItem('apiBaseUrl') || 'http://localhost:8000') : 'http://localhost:8000').replace(/\/$/, "");
+  return `${base}/api/stream-summary/${encodeURIComponent(taskId)}`;
+}

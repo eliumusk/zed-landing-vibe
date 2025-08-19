@@ -9,6 +9,7 @@ import { MarkdownRenderer } from "@/components/MarkdownRenderer";
 import { getResults, getStatus, getMarkdownContent, saveMarkdownContent } from "@/lib/api";
 import { AgentAssistant } from "@/components/AgentAssistant";
 import { SubtitleDisplay } from "@/components/SubtitleDisplay";
+import { StreamingSummary } from "@/components/StreamingSummary";
 import { ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
 import { useI18n } from "@/lib/i18n";
@@ -174,6 +175,9 @@ export default function Result() {
               onTimeUpdate={handleVideoTimeUpdate}
             />
           )}
+
+          {/* 流式摘要区域 - 自动触发 */}
+          <StreamingSummary taskId={taskId!} />
 
           {/* 字幕显示区域 - 可折叠 */}
           <SubtitleDisplay
