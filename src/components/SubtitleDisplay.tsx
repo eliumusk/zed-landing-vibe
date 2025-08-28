@@ -56,17 +56,23 @@ export function SubtitleDisplay({ taskId, currentTime }: SubtitleDisplayProps) {
               </div>
               <Button variant="ghost" size="sm">{isOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}</Button>
             </div>
-            {currentSubtitle && (
-              <div className="mt-2 p-3 bg-primary/10 rounded-md border-l-4 border-primary">
+          </CardHeader>
+        </CollapsibleTrigger>
+
+        <CollapsibleContent>
+          {/* 当前字幕预览 - 移到可折叠内容区域 */}
+          {currentSubtitle && (
+            <div className="px-6 pb-3">
+              <div className="p-3 bg-primary/10 rounded-md border-l-4 border-primary">
                 <div className="flex items-center gap-2 text-sm text-muted-foreground mb-1">
                   <Clock className="w-3 h-3" />
                   {formatTime(currentSubtitle.start_time)} - {formatTime(currentSubtitle.end_time)}
                 </div>
                 <p className="text-sm font-medium">{currentSubtitle.text}</p>
               </div>
-            )}
-          </CardHeader>
-        </CollapsibleTrigger>
+            </div>
+          )}
+        </CollapsibleContent>
         <CollapsibleContent>
           <CardContent className="pt-0">
             <div className="space-y-2 max-h-[300px] overflow-y-auto">

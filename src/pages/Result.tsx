@@ -166,38 +166,39 @@ export default function Result() {
 
       {/* 主内容区域 */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-[calc(100vh-200px)]">
-        {/* 左侧：视频播放器 + 字幕 + 时间轴 */}
+        {/* 左侧：视频播放器置顶吸附，下面三个模块作为一组滚动 */}
         <div className="space-y-4">
-          {taskId && (
-            <VideoPlayer
-              taskId={taskId}
-              currentTime={currentVideoTime}
-              onTimeUpdate={handleVideoTimeUpdate}
-            />
-          )}
-
-          {/* 流式摘要区域 - 自动触发 */}
-          <StreamingSummary taskId={taskId!} />
-
-          {/* 字幕显示区域 - 可折叠 */}
-          <SubtitleDisplay
-            taskId={taskId!}
-            currentTime={currentVideoTime}
-          />
-
-          <Card className="flex-1">
-            <CardHeader>
-              <CardTitle>{t("result.timeline")}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <TimelineView
-                segments={timelineSegments}
+          <div className="sticky top-4 z-10">
+            {taskId && (
+              <VideoPlayer
+                taskId={taskId}
                 currentTime={currentVideoTime}
-                onSegmentClick={handleSegmentClick}
-                taskId={taskId!}
+                onTimeUpdate={handleVideoTimeUpdate}
               />
-            </CardContent>
-          </Card>
+            )}
+          </div>
+
+          <div className="space-y-4">
+            {/* 流式摘要区域 */}
+            <StreamingSummary taskId={taskId!} />
+
+            {/* 字幕显示区域 - 可折叠 */}
+            <SubtitleDisplay taskId={taskId!} currentTime={currentVideoTime} />
+
+            <Card className="flex-1">
+              <CardHeader>
+                <CardTitle>{t("result.timeline")}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <TimelineView
+                  segments={timelineSegments}
+                  currentTime={currentVideoTime}
+                  onSegmentClick={handleSegmentClick}
+                  taskId={taskId!}
+                />
+              </CardContent>
+            </Card>
+          </div>
         </div>
 
         {/* 右侧：Markdown渲染 */}
