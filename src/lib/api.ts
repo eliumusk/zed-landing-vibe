@@ -37,6 +37,14 @@ export async function getStatus(taskId: string) {
   return apiFetch<StatusResponse>(`/api/status/${encodeURIComponent(taskId)}`);
 }
 
+export async function getAsr(taskId: string) {
+  return apiFetch<{ task_id: string; data: any }>(`/api/results/${encodeURIComponent(taskId)}/asr`);
+}
+
+export async function getSummary(taskId: string) {
+  return apiFetch<{ task_id: string; data: any }>(`/api/results/${encodeURIComponent(taskId)}/summary`);
+}
+
 export async function getResults(taskId: string) {
   return apiFetch<any>(`/api/results/${encodeURIComponent(taskId)}`);
 }
