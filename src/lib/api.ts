@@ -112,3 +112,11 @@ export function getStreamSummaryUrl(taskId: string){
   const base=(typeof window!=='undefined'?(window.localStorage.getItem('apiBaseUrl')||'/'):'/').replace(/\/$/,"");
   return `${base}/api/stream-summary/${encodeURIComponent(taskId)}`;
 }
+
+//流式agent
+export async function streamAgent(taskId:string,msg:string,onDelta:(t:string)=>void,onDone?:()=>void){
+  const base=(typeof window!=='undefined'?(localStorage.getItem('apiBaseUrl')||'/'):'/').replace(/\/$/,"");
+  const res=await fetch(`${base}/api/agent/stream`,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({task_id:taskId,message:msg})});
+  if(!res.body) return;const r=res.body.getReader();const d=new TextDecoder();
+  let buf="";while(true){const {done,value}=await r.read();if(done)break;buf+=d.decode(value,{stream:true});for(const line of buf.split("\n\n")){if(!line.startsWith("data:"))continue;const j=line.slice(5).trim();try{const o=JSON.parse(j);if(o?.content) onDelta(o.content)}catch{} } buf="";} onDone&&onDone();
+}
