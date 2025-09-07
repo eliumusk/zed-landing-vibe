@@ -12,15 +12,16 @@ export default defineConfig(({ mode }) => ({
     allowedHosts: [
       "ab-olympic-sponsored-proudly.trycloudflare.com"
     ],
+    proxy: {
+      "/api": { target: "http://localhost:8000", changeOrigin: true },
+      "/storage": { target: "http://localhost:8000", changeOrigin: true }
+    }
   },
   plugins: [
     react(),
-    mode === 'development' &&
-    componentTagger(),
+    mode === 'development' && componentTagger(),
   ].filter(Boolean),
   resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "./src"),
-    },
+    alias: { "@": path.resolve(__dirname, "./src") },
   },
 }));

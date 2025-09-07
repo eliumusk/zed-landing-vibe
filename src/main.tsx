@@ -1,5 +1,8 @@
 import { createRoot } from 'react-dom/client'
 import App from './App.tsx'
 import './index.css'
+import { initApiBaseUrl } from './lib/config'
 
-createRoot(document.getElementById("root")!).render(<App />);
+initApiBaseUrl().finally(()=>{
+  createRoot(document.getElementById('root')!).render(<App/>);
+});

@@ -61,14 +61,11 @@ export async function saveMarkdownContent(taskId: string, content: string) {
 }
 
 export function getExportMarkdownUrl(taskId: string) {
-  // Return full URL for direct download
-  const base = (typeof window !== 'undefined' ? (window.localStorage.getItem('apiBaseUrl') || 'http://localhost:8000') : 'http://localhost:8000').replace(/\/$/, "");
+  const base=(typeof window!=='undefined'?(window.localStorage.getItem('apiBaseUrl')||'/'):'/').replace(/\/$/,"");
   return `${base}/api/export/${encodeURIComponent(taskId)}/markdown`;
 }
-
 export function getExportPdfUrl(taskId: string) {
-  // Return full URL for direct download
-  const base = (typeof window !== 'undefined' ? (window.localStorage.getItem('apiBaseUrl') || 'http://localhost:8000') : 'http://localhost:8000').replace(/\/$/, "");
+  const base=(typeof window!=='undefined'?(window.localStorage.getItem('apiBaseUrl')||'/'):'/').replace(/\/$/,"");
   return `${base}/api/export/${encodeURIComponent(taskId)}/pdf`;
 }
 
@@ -111,7 +108,7 @@ export async function getDownloadStatus(taskId: string) {
 }
 
 // 流式摘要API
-export function getStreamSummaryUrl(taskId: string) {
-  const base = (typeof window !== 'undefined' ? (window.localStorage.getItem('apiBaseUrl') || 'http://localhost:8000') : 'http://localhost:8000').replace(/\/$/, "");
+export function getStreamSummaryUrl(taskId: string){
+  const base=(typeof window!=='undefined'?(window.localStorage.getItem('apiBaseUrl')||'/'):'/').replace(/\/$/,"");
   return `${base}/api/stream-summary/${encodeURIComponent(taskId)}`;
 }
