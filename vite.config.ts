@@ -8,6 +8,10 @@ export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
     port: 8080,
+    // ✅ 允许 Cloudflare Tunnel 访问
+    allowedHosts: [
+      "ab-olympic-sponsored-proudly.trycloudflare.com"
+    ],
   },
   plugins: [
     react(),

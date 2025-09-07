@@ -15,11 +15,11 @@ const I18nContext = createContext<I18nContextType | null>(null);
 const STORAGE_KEY = "app_lang";
 
 const zh: Dict = {
-  "brand.name": "amazing_video2note",
+  "brand.name": "FrameNote",
   "nav.product": "产品",
   "nav.resources": "资源",
   "nav.faq": "帮助",
-  "hero.title": "为老师和创作者打造的AI视频笔记工具",
+  "hero.title": "FrameNote：课堂、故事、尽收眼底。",
   "hero.subtitle": "一键提取PPT、自动生成讲义和知识图片，极致高效，极简体验。",
   "hero.upload": "上传视频",
   "hero.demo": "试用Demo",
@@ -37,13 +37,13 @@ const zh: Dict = {
   "steps.2.desc": "显示进度，自动识别PPT/生成讲义/提取知识点。",
   "steps.3": "3. 编辑与导出",
   "steps.3.desc": "拖拽调整、批量编辑、模板切换；一键导出PDF/Word/图片。",
-  "high.1": "专为老师定制",
+  "high.1": "专为高效的你定制",
   "high.2": "AI自动识别PPT，讲义一键生成",
   "high.3": "支持多语言",
   "high.4": "极速体验 · 隐私安全",
   "faq.title": "常见问题",
   "faq.q1": "支持哪些平台？",
-  "faq.a1": "支持本地文件与在线链接（YouTube/B站/抖音等），此页面以通用图标呈现。",
+  "faq.a1": "支持本地文件与在线链接（YouTube/B站等），此页面以通用图标呈现。",
   "faq.q2": "是否需要注册？",
   "faq.a2": "无需注册即可体验核心流程，专业功能可在登录后解锁。",
   "faq.q3": "我的数据是否安全？",
@@ -64,12 +64,12 @@ const zh: Dict = {
   "notfound.title": "页面不存在",
   "notfound.back": "返回首页",
 
-  "seo.index.title": "amazing_video2note | AI视频笔记工具",
+  "seo.index.title": "FrameNote | AI视频笔记工具",
   "seo.index.desc": "AI 视频笔记工具：一键提取PPT、自动生成讲义和知识图片，极致高效，极简体验。",
   "seo.result.desc": "查看并编辑由AI生成的视频讲义与时间轴笔记。",
 
   "url.input.label": "视频链接",
-  "url.input.placeholder": "粘贴视频链接（支持 YouTube/B站/抖音 等）",
+  "url.input.placeholder": "粘贴视频链接（支持 YouTube/B站 等）",
   "url.preview": "预览",
   "url.start": "解析并下载",
   "url.progress": "进度",
@@ -80,6 +80,9 @@ const zh: Dict = {
   "url.preview.fail": "预览失败，请稍后重试",
   "url.start.ok": "下载任务已启动",
   "url.start.fail": "启动失败，请重试",
+
+  "upload.local": "本地文件",
+  "upload.online": "在线链接",
 
   "notes.image.tools": "图片管理与裁剪",
   "notes.image.none": "未检测到图片",
@@ -94,11 +97,11 @@ const zh: Dict = {
 };
 
 const en: Dict = {
-  "brand.name": "amazing_video2note",
+  "brand.name": "FrameNote",
   "nav.product": "Product",
   "nav.resources": "Resources",
   "nav.faq": "Help",
-  "hero.title": "AI video note tool for teachers and creators",
+  "hero.title": "FrameNote: Your lecture. Your story. Captured.",
   "hero.subtitle": "Extract slides, auto-generate handouts and knowledge images. Super efficient, minimal UI.",
   "hero.upload": "Upload Video",
   "hero.demo": "Try Demo",
@@ -116,13 +119,13 @@ const en: Dict = {
   "steps.2.desc": "Progress shown. Slide detection, handout generation, knowledge extraction.",
   "steps.3": "3. Edit & Export",
   "steps.3.desc": "Reorder, batch edit, switch templates. Export to PDF/Word/Images.",
-  "high.1": "Tailored for Teachers",
+  "high.1": "Tailored for You",
   "high.2": "Auto slide detection & one-click handouts",
   "high.3": "Multi-language Support",
   "high.4": "Fast • Private",
   "faq.title": "FAQ",
   "faq.q1": "Which platforms are supported?",
-  "faq.a1": "Local files and online links (YouTube/Bilibili/TikTok, etc.).",
+  "faq.a1": "Local files and online links (YouTube/Bilibili, etc.).",
   "faq.q2": "Is registration required?",
   "faq.a2": "Try core features without signup; pro features after login.",
   "faq.q3": "Is my data safe?",
@@ -143,12 +146,12 @@ const en: Dict = {
   "notfound.title": "Page Not Found",
   "notfound.back": "Return Home",
 
-  "seo.index.title": "amazing_video2note | AI Video Notes Tool",
+  "seo.index.title": "FrameNote | AI Video Notes Tool",
   "seo.index.desc": "Extract slides, auto-generate handouts and knowledge images. Super efficient, minimal UI.",
   "seo.result.desc": "View and edit AI-generated handouts and timeline notes.",
 
   "url.input.label": "Video URL",
-  "url.input.placeholder": "Paste a video URL (YouTube/Bilibili/TikTok, etc.)",
+  "url.input.placeholder": "Paste a video URL (YouTube/Bilibili, etc.)",
   "url.preview": "Preview",
   "url.start": "Parse & Download",
   "url.progress": "Progress",
@@ -159,6 +162,9 @@ const en: Dict = {
   "url.preview.fail": "Preview failed, try again later",
   "url.start.ok": "Download started",
   "url.start.fail": "Start failed, please retry",
+
+  "upload.local": "Local File",
+  "upload.online": "Online Link",
 
   "notes.image.tools": "Image Manager & Crop",
   "notes.image.none": "No images detected",

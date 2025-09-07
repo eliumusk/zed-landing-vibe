@@ -19,7 +19,7 @@ function PaperCard() {
   return (
     <article className="relative rounded-lg border bg-card p-6 md:p-8 shadow-sm">
       <GridOverlay />
-      <h3 className="mb-3 text-sm font-semibold tracking-wide text-foreground/80">AMAZING_VIDEO2NOTE · 教育机构</h3>
+      <h3 className="mb-3 text-sm font-semibold tracking-wide text-foreground/80">FrameNote · 教育机构</h3>
       <p className="relative text-sm leading-7 text-muted-foreground">
         “我把课堂讲解分段上传，系统几秒就产出结构化讲义。需要修改的地方，我直接<mark className="rounded-sm bg-primary/10 ring-1 ring-primary/20 px-1">高亮评论</mark>，它会自动调整排版。<mark className="rounded-sm bg-primary/10 ring-1 ring-primary/20 px-1">从想法到可用讲义不到半小时</mark>——真的很爽。”
       </p>

@@ -15,7 +15,7 @@ const Index = () => {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
-    name: "amazing_video2note",
+    name: "FrameNote",
     applicationCategory: "EducationalApplication",
     operatingSystem: "Web, macOS, Linux, Windows",
     description: "AI 视频笔记工具：一键提取PPT、自动生成讲义与知识图片，极速体验，隐私安全。",
@@ -58,9 +58,9 @@ const Index = () => {
           <BackgroundGrid />
           <div className="container mx-auto relative z-10 py-24 md:py-32 text-center">
             <p className="mb-6 flex items-center justify-center gap-3 text-xs md:text-sm text-primary">
-              <Video className="h-4 w-4" aria-hidden /> 本地文件
+              <Video className="h-4 w-4" aria-hidden /> {t("upload.local")}
               <span className="opacity-40">·</span>
-              <LinkIcon className="h-4 w-4" aria-hidden /> 在线链接
+              <LinkIcon className="h-4 w-4" aria-hidden /> {t("upload.online")}
             </p>
             <h1 className="text-4xl md:text-6xl lg:text-7xl leading-tight tracking-tight text-primary animate-enter font-semibold">
               {t("hero.title")}

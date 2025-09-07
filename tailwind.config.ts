@@ -64,8 +64,8 @@ export default {
 				}
 			},
 			fontFamily: {
-				sans: ["Inter", "ui-sans-serif", "system-ui", "-apple-system", "Segoe UI", "Roboto", "Noto Sans", "Ubuntu", "Cantarell", "Helvetica Neue", "Arial", "sans-serif"],
-				display: ["Playfair Display", "serif"]
+				sans: ["-apple-system", "BlinkMacSystemFont", "SF Pro Display", "SF Pro Text", "Helvetica Neue", "Helvetica", "Arial", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", "sans-serif"],
+				display: ["SF Pro Display", "-apple-system", "BlinkMacSystemFont", "serif"]
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
