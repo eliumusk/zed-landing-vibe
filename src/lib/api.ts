@@ -114,9 +114,52 @@ export function getStreamSummaryUrl(taskId: string){
 }
 
 //流式agent
-export async function streamAgent(taskId:string,msg:string,onDelta:(t:string)=>void,onDone?:()=>void){
-  const base=(typeof window!=='undefined'?(localStorage.getItem('apiBaseUrl')||'/'):'/').replace(/\/$/,"");
-  const res=await fetch(`${base}/api/agent/stream`,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({task_id:taskId,message:msg})});
-  if(!res.body) return;const r=res.body.getReader();const d=new TextDecoder();
-  let buf="";while(true){const {done,value}=await r.read();if(done)break;buf+=d.decode(value,{stream:true});for(const line of buf.split("\n\n")){if(!line.startsWith("data:"))continue;const j=line.slice(5).trim();try{const o=JSON.parse(j);if(o?.content) onDelta(o.content)}catch{} } buf="";} onDone&&onDone();
+export async function streamAgent(
+  taskId: string,
+  msg: string,
+  onDelta: (t: string) => void,
+  onDone?: () => void,
+  onSources?: (sources: string[]) => void
+) {
+  const base = (typeof window !== 'undefined' ? (localStorage.getItem('apiBaseUrl') || '/') : '/').replace(/\/$/, "");
+  const res = await fetch(`${base}/api/agent/stream`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({ task_id: taskId, message: msg })
+  });
+
+  if (!res.body) return;
+  const reader = res.body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = "";
+
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+
+    buffer += decoder.decode(value, { stream: true });
+    const lines = buffer.split("\n\n");
+    buffer = lines.pop() || ""; // 保留最后一个可能不完整的行
+
+    for (const line of lines) {
+      if (!line.startsWith("data:")) continue;
+      const jsonStr = line.slice(5).trim();
+      try {
+        const obj = JSON.parse(jsonStr);
+        if (obj?.content) {
+          onDelta(obj.content);
+        } else if (obj?.sources && onSources) {
+          onSources(obj.sources);
+        } else if (obj?.done) {
+          // 完成标记
+        } else if (obj?.error) {
+          console.error("Stream error:", obj.error);
+        }
+      } catch (e) {
+        // 忽略解析错误
+      }
+    }
+  }
+
+  onDone && onDone();
 }
