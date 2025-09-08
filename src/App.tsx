@@ -11,6 +11,7 @@ import NotFound from "./pages/NotFound";
 import Result from "./pages/Result";
 const queryClient = new QueryClient();
 
+import { LayoutProvider, LayoutContainer } from "@/lib/layout";
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
@@ -18,15 +19,18 @@ const App = () => (
       <Sonner />
       <LanguageProvider>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <BrowserRouter>
-            <AppHeader />
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/result/:taskId" element={<Result />} />
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </BrowserRouter>
+          <LayoutProvider>
+            <BrowserRouter>
+              <LayoutContainer>
+                <AppHeader />
+                <Routes>
+                  <Route path="/" element={<Index />} />
+                  <Route path="/result/:taskId" element={<Result />} />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </LayoutContainer>
+            </BrowserRouter>
+          </LayoutProvider>
         </ThemeProvider>
       </LanguageProvider>
     </TooltipProvider>
