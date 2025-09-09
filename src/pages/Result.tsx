@@ -10,6 +10,7 @@ import { getResults, getStatus, getMarkdownContent, saveMarkdownContent } from "
 import { AgentAssistant } from "@/components/AgentAssistant";
 import { SubtitleDisplay } from "@/components/SubtitleDisplay";
 import { StreamingSummary } from "@/components/StreamingSummary";
+import { ProcessingProgress } from "@/components/ProcessingProgress";
 import { ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
 import { useI18n } from "@/lib/i18n";
@@ -20,6 +21,7 @@ export default function Result() {
   const nav = useNavigate();
   const { t, lang } = useI18n();
   const [currentVideoTime, setCurrentVideoTime] = useState(0);
+  const [realtimeStatus, setRealtimeStatus] = useState<any>(null);
 
   // Throttled video time update to prevent excessive re-renders
   const handleVideoTimeUpdate = useCallback((time: number) => {
@@ -54,30 +56,69 @@ export default function Result() {
     return () => { /* keep canonical */ };
   }, [taskId, t, lang]);
 
+  // 使用轮询获取实时状态更新
+  useEffect(() => {
+    if (!taskId) return;
+
+    let pollInterval: NodeJS.Timeout | null = null;
+    let isCleanedUp = false;
+
+    const startPolling = () => {
+      if (isCleanedUp) return;
+
+      pollInterval = setInterval(async () => {
+        if (isCleanedUp) return;
+        try {
+          const status = await getStatus(taskId);
+          setRealtimeStatus(status);
+          if (status.status === "completed" || status.status === "failed") {
+            if (pollInterval) clearInterval(pollInterval);
+            // 不自动刷新，让用户看到完成状态
+            // setTimeout(() => {
+            //   if (!isCleanedUp) window.location.reload();
+            // }, 1500);
+          }
+        } catch (error) {
+          console.error("Status polling failed:", error);
+        }
+      }, 1500); // 1.5秒轮询一次
+    };
+
+    startPolling();
+
+    return () => {
+      isCleanedUp = true;
+      if (pollInterval) {
+        clearInterval(pollInterval);
+        pollInterval = null;
+      }
+    };
+  }, [taskId]);
+
   const statusQuery = useQuery({
     queryKey: ["status", taskId],
     queryFn: () => getStatus(taskId!),
     enabled: !!taskId,
     retry: 3,
-    refetchInterval: (q) => {
-      const s = q.state.data as any;
-      // 只有在成功获取到completed或failed状态时才停止轮询
-      return (s && (s.status === "completed" || s.status === "failed")) ? false : 5000;
-    },
+    refetchInterval: false, // 禁用轮询，使用自定义轮询
   });
 
 
 
+  // 使用实时状态或查询状态
+  const currentStatus = realtimeStatus || statusQuery.data;
+  const isCompleted = currentStatus?.status === "completed";
+
   const resultsQuery = useQuery({
     queryKey: ["results", taskId],
     queryFn: () => getResults(taskId!),
-    enabled: !!taskId && statusQuery.data?.status === "completed",
+    enabled: !!taskId && isCompleted,
   });
 
   const markdownQuery = useQuery({
     queryKey: ["markdown", taskId],
     queryFn: () => getMarkdownContent(taskId!),
-    enabled: !!taskId && statusQuery.data?.status === "completed",
+    enabled: !!taskId && isCompleted,
   });
 
 
@@ -95,8 +136,8 @@ export default function Result() {
       : (notesObj?.segments || []);
 
     const base = (typeof window !== 'undefined'
-      ? (window.localStorage.getItem('apiBaseUrl') || 'http://localhost:8000')
-      : 'http://localhost:8000').replace(/\/$/, "");
+      ? (window.localStorage.getItem('apiBaseUrl') || 'http://localhost:8001')
+      : 'http://localhost:8001').replace(/\/$/, "");
 
     return segments.map((seg, index) => {
       // 计算开始时间（秒），接口里是字符串，需要解析
@@ -164,23 +205,38 @@ export default function Result() {
         </div>
       </div>
 
+      {/* 处理进度显示 */}
+      {currentStatus && !isCompleted && (
+        <div className="mb-6">
+          <ProcessingProgress
+            taskId={taskId!}
+            status={currentStatus}
+            onComplete={() => {
+              // 处理完成后的回调 - 不自动刷新，避免中断流式摘要
+              console.log("Processing completed!");
+            }}
+          />
+        </div>
+      )}
+
       {/* 主内容区域 */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-[calc(100vh-200px)]">
-        {/* 左侧：视频播放器置顶吸附，下面三个模块作为一组滚动 */}
-        <div className="space-y-4">
-          <div className="sticky top-4 z-10">
-            {taskId && (
-              <VideoPlayer
-                taskId={taskId}
-                currentTime={currentVideoTime}
-                onTimeUpdate={handleVideoTimeUpdate}
-              />
-            )}
-          </div>
+      {isCompleted && (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-[calc(100vh-200px)] overflow-hidden">
+          {/* 左侧：视频播放器置顶吸附，下面三个模块作为一组滚动 */}
+          <div className="space-y-4 overflow-y-auto pr-2">
+            <div className="sticky top-4 z-10">
+              {taskId && (
+                <VideoPlayer
+                  taskId={taskId}
+                  currentTime={currentVideoTime}
+                  onTimeUpdate={handleVideoTimeUpdate}
+                />
+              )}
+            </div>
 
           <div className="space-y-4">
             {/* 流式摘要区域 */}
-            <StreamingSummary taskId={taskId!} />
+            <StreamingSummary taskId={taskId!} isTaskCompleted={isCompleted} />
 
             {/* 字幕显示区域 - 可折叠 */}
             <SubtitleDisplay taskId={taskId!} currentTime={currentVideoTime} />
@@ -202,16 +258,20 @@ export default function Result() {
         </div>
 
         {/* 右侧：Markdown渲染 */}
-        <div className="h-full">
-          <MarkdownRenderer
-            content={markdownQuery.data || t("result.notes.loading")}
-            onContentChange={handleMarkdownChange}
-            taskId={taskId!}
-            isEditable={true}
-          />
+        <div className="h-full overflow-hidden">
+          <div className="h-full overflow-y-auto pl-2">
+            <MarkdownRenderer
+              content={markdownQuery.data || t("result.notes.loading")}
+              onContentChange={handleMarkdownChange}
+              taskId={taskId!}
+              isEditable={true}
+            />
+          </div>
         </div>
-      </div>
-      <AgentAssistant taskId={taskId!} />
+        </div>
+      )}
+
+      {isCompleted && <AgentAssistant taskId={taskId!} />}
     </main>
   );
 }

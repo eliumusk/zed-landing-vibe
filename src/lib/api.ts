@@ -14,7 +14,11 @@ export type ProcessParams = {
 export type StatusResponse = {
   task_id: string;
   status: "pending" | "processing" | "completed" | "failed";
+  current_step?: string;
+  progress_percent?: number;
   created_at?: string;
+  updated_at?: string;
+  error_message?: string;
 };
 
 export async function uploadVideo(file: File) {
@@ -162,4 +166,63 @@ export async function streamAgent(
   }
 
   onDone && onDone();
+}
+
+// SSE状态流
+export function createStatusStream(taskId: string, onStatus: (status: StatusResponse) => void, onComplete?: () => void, onError?: () => void) {
+  const base = (typeof window !== 'undefined' ? (localStorage.getItem('apiBaseUrl') || '/') : '/').replace(/\/$/, "");
+  const eventSource = new EventSource(`${base}/api/status/stream/${encodeURIComponent(taskId)}`);
+
+  let isCompleted = false;
+
+  eventSource.onmessage = (event) => {
+    try {
+      const data = JSON.parse(event.data);
+
+      // 处理错误消息
+      if (data.error) {
+        console.error("SSE error:", data.error);
+        eventSource.close();
+        onError?.();
+        return;
+      }
+
+      // 处理完成标记
+      if (data.done) {
+        eventSource.close();
+        if (!isCompleted) onComplete?.();
+        return;
+      }
+
+      // 处理状态更新
+      const status = data as StatusResponse;
+      onStatus(status);
+
+      if (status.status === "completed" || status.status === "failed") {
+        isCompleted = true;
+        setTimeout(() => {
+          eventSource.close();
+          onComplete?.();
+        }, 1000);
+      }
+    } catch (error) {
+      console.error("Failed to parse SSE data:", error);
+    }
+  };
+
+  eventSource.onerror = (error) => {
+    console.warn("SSE connection error:", error);
+    eventSource.close();
+    onError?.();
+  };
+
+  // 5分钟后自动关闭连接
+  setTimeout(() => {
+    if (eventSource.readyState !== EventSource.CLOSED) {
+      eventSource.close();
+      onError?.();
+    }
+  }, 300000);
+
+  return eventSource;
 }
