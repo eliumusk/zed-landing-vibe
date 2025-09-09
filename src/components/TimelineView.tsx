@@ -30,7 +30,7 @@ export function TimelineView({ segments, currentTime, onSegmentClick, taskId }: 
   };
 
   return (
-    <div className="space-y-4 max-h-[60vh] overflow-y-auto">
+    <div className="space-y-4 max-h-[60vh] overflow-y-auto no-scrollbar">
       {segments.map((segment, index) => (
         <Card
           key={index}

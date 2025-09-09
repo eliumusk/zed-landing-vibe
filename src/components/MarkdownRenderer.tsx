@@ -159,7 +159,7 @@ export function MarkdownRenderer({
                 value={editedContent}
                 onChange={(e) => setEditedContent(e.target.value)}
                 placeholder="编辑您的笔记..."
-                className="flex-1 min-h-0 resize-none font-mono text-xs"
+                className="flex-1 min-h-0 resize-none no-scrollbar font-mono text-xs"
               />
 
               {/* Image tools dialog */}
@@ -172,7 +172,7 @@ export function MarkdownRenderer({
             </TabsContent>
           </Tabs>
         ) : (
-          <div className="h-full overflow-y-auto prose prose-sm max-w-none dark:prose-invert">
+          <div className="h-full overflow-y-auto no-scrollbar prose prose-sm max-w-none dark:prose-invert">
             <ReactMarkdown remarkPlugins={[remarkGfm]}>
               {content}
             </ReactMarkdown>

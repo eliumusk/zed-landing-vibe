@@ -187,7 +187,7 @@ export default function Result() {
   return (
     <main className="container mx-auto py-6 px-4">
       {/* 头部 */}
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-4">
           <Button
             variant="ghost"
@@ -199,8 +199,8 @@ export default function Result() {
             {t("result.back")}
           </Button>
           <div>
-            <h1 className="text-2xl font-semibold">{t("result.title")}</h1>
-            <p className="text-sm text-muted-foreground">{t("result.task")}: {taskId}</p>
+            <h1 className="text-xl leading-tight font-semibold">{t("result.title")}</h1>
+            <p className="text-sm text-muted-foreground ">{t("result.task")}: {taskId}</p>
           </div>
         </div>
       </div>
@@ -223,8 +223,8 @@ export default function Result() {
       {isCompleted && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-[calc(100vh-200px)] overflow-hidden">
           {/* 左侧：视频播放器置顶吸附，下面三个模块作为一组滚动 */}
-          <div className="space-y-4 overflow-y-auto pr-2">
-            <div className="sticky top-4 z-10">
+          <div className="space-y-4 overflow-y-auto no-scrollbar pr-2">
+            <div className="sticky top-0 z-10">
               {taskId && (
                 <VideoPlayer
                   taskId={taskId}
@@ -259,7 +259,7 @@ export default function Result() {
 
         {/* 右侧：Markdown渲染 */}
         <div className="h-full overflow-hidden">
-          <div className="h-full overflow-y-auto pl-2">
+          <div className="h-full overflow-y-auto no-scrollbar pl-2">
             <MarkdownRenderer
               content={markdownQuery.data || t("result.notes.loading")}
               onContentChange={handleMarkdownChange}
