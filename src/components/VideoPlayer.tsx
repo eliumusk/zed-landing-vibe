@@ -2,6 +2,7 @@ import { useRef, useEffect, useCallback, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { getApiBaseUrl } from "@/lib/config";
+import { useI18n } from "@/lib/i18n";
 import { Minimize2, Maximize2, EyeOff, Eye } from "lucide-react";
 
 interface VideoPlayerProps {
@@ -11,6 +12,7 @@ interface VideoPlayerProps {
 }
 
 export function VideoPlayer({ taskId, currentTime, onTimeUpdate }: VideoPlayerProps) {
+  const { t } = useI18n();
   const videoRef = useRef<HTMLVideoElement>(null);
   const lastUpdateTimeRef = useRef<number>(0);
   const isSeekingRef = useRef<boolean>(false);
@@ -57,7 +59,7 @@ export function VideoPlayer({ taskId, currentTime, onTimeUpdate }: VideoPlayerPr
   return (
     <Card className="overflow-hidden">
       <div className="flex items-center justify-between px-3 pt-2">
-        <div className="text-xs text-muted-foreground">视频预览</div>
+        <div className="text-xs text-muted-foreground">{t("video.preview")}</div>
         <div className="flex gap-2">
           <Button variant="ghost" size="sm" onClick={()=>setCompact(v=>!v)} className="h-7 px-2">
             {compact? <Maximize2 className="w-4 h-4"/> : <Minimize2 className="w-4 h-4"/>}

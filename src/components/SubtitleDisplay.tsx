@@ -6,12 +6,14 @@ import { Badge } from "@/components/ui/badge";
 import { ChevronDown, ChevronUp, Subtitles, Clock } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { getAsr } from "@/lib/api";
+import { useI18n } from "@/lib/i18n";
 
 interface SubtitleItem {text: string;start_time: number;end_time: number;}
 
 interface SubtitleDisplayProps {taskId: string;currentTime: number;}
 
 export function SubtitleDisplay({ taskId, currentTime }: SubtitleDisplayProps) {
+  const { t } = useI18n();
   const [isOpen, setIsOpen] = useState(false);
 
   // 获取ASR结果
@@ -51,8 +53,8 @@ export function SubtitleDisplay({ taskId, currentTime }: SubtitleDisplayProps) {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Subtitles className="w-5 h-5" />
-                <CardTitle className="text-lg">字幕转录</CardTitle>
-                <Badge variant="secondary" className="ml-2">{subtitles.length} 条</Badge>
+                <CardTitle className="text-lg">{t("subtitle.title")}</CardTitle>
+                <Badge variant="secondary" className="ml-2">{subtitles.length} {t("subtitle.count")}</Badge>
               </div>
               <Button variant="ghost" size="sm">{isOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}</Button>
             </div>
@@ -83,7 +85,7 @@ export function SubtitleDisplay({ taskId, currentTime }: SubtitleDisplayProps) {
                     <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1">
                       <Clock className="w-3 h-3" />
                       <span>{formatTime(s.start_time)} - {formatTime(s.end_time)}</span>
-                      {isActive && (<Badge variant="default" className="ml-auto text-xs">当前播放</Badge>)}
+                      {isActive && (<Badge variant="default" className="ml-auto text-xs">{t("subtitle.current")}</Badge>)}
                     </div>
                     <p className={`text-sm ${isActive?"font-medium":""}`}>{s.text}</p>
                   </div>
@@ -93,7 +95,7 @@ export function SubtitleDisplay({ taskId, currentTime }: SubtitleDisplayProps) {
             {subtitles.length===0 && (
               <div className="text-center py-8 text-muted-foreground">
                 <Subtitles className="w-8 h-8 mx-auto mb-2 opacity-50" />
-                <p>暂无字幕数据</p>
+                <p>{t("subtitle.empty")}</p>
               </div>
             )}
           </CardContent>

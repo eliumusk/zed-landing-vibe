@@ -131,10 +131,10 @@ export default function OnlineDownloader() {
               <div className="mt-2 space-y-3">
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-muted-foreground flex items-center gap-2">
-                    状态: {status.status === "downloading" ? "下载中..." :
-                           status.status === "processing" ? "处理中..." :
-                           status.status === "completed" ? "完成" :
-                           status.status === "failed" ? "失败" : status.status}
+                    {t("download.status")}: {status.status === "downloading" ? t("download.downloading") :
+                           status.status === "processing" ? t("download.processing") :
+                           status.status === "completed" ? t("download.completed") :
+                           status.status === "failed" ? t("download.failed") : status.status}
                     {isActive && (
                       <Loader2 className="w-4 h-4 animate-spin text-primary" aria-label="loading" />
                     )}
@@ -144,7 +144,7 @@ export default function OnlineDownloader() {
                 {status.status === "completed" && taskId && (
                   <div className="pt-2">
                     <Button asChild variant="secondary">
-                      <Link to={`/result/${taskId}`}>查看结果</Link>
+                      <Link to={`/result/${taskId}`}>{t("download.view.result")}</Link>
                     </Button>
                   </div>
                 )}

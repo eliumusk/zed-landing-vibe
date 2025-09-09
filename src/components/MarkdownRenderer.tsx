@@ -78,7 +78,7 @@ export function MarkdownRenderer({
         <div className="flex items-center justify-between">
           <CardTitle className="flex items-center gap-2">
             <Eye className="w-4 h-4" />
-            图文笔记
+            {t("markdown.title")}
           </CardTitle>
           <div className="flex gap-2">
             <Button
@@ -87,7 +87,7 @@ export function MarkdownRenderer({
               onClick={handleDownload}
             >
               <Download className="w-4 h-4 mr-1" />
-              导出 MD
+              {t("markdown.export.md")}
             </Button>
             <Button
               variant="outline"
@@ -95,7 +95,7 @@ export function MarkdownRenderer({
               onClick={handlePdfExport}
             >
               <FileText className="w-4 h-4 mr-1" />
-              导出 PDF
+              {t("markdown.export.pdf")}
             </Button>
           </div>
         </div>
@@ -107,11 +107,11 @@ export function MarkdownRenderer({
             <TabsList className="grid w-full grid-cols-2 mb-4">
               <TabsTrigger value="preview" className="flex items-center gap-1">
                 <Eye className="w-3 h-3" />
-                预览
+                {t("markdown.preview")}
               </TabsTrigger>
               <TabsTrigger value="edit" className="flex items-center gap-1">
                 <Edit3 className="w-3 h-3" />
-                编辑
+                {t("markdown.edit")}
               </TabsTrigger>
             </TabsList>
 
@@ -148,10 +148,10 @@ export function MarkdownRenderer({
                       setActiveTab("preview");
                     }}
                   >
-                    取消
+                    {t("markdown.cancel")}
                   </Button>
                   <Button size="sm" onClick={handleSave}>
-                    保存更改
+                    {t("markdown.save")}
                   </Button>
                 </div>
               </div>

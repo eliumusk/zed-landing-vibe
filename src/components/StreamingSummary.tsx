@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { FileText, Loader2, RefreshCw, ChevronDown, ChevronUp } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { getStreamSummaryUrl } from "@/lib/api";
+import { useI18n } from "@/lib/i18n";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
@@ -12,6 +13,7 @@ interface Props{taskId:string; isTaskCompleted?: boolean}
 
 // 智能摘要组件（直接请求流式端点）
 export function StreamingSummary({taskId, isTaskCompleted = false}:Props){
+  const { t } = useI18n();
   const [isOpen,setIsOpen]=useState(true);
   const [txt,setTxt]=useState("");
   const [ing,setIng]=useState(false);
@@ -42,7 +44,7 @@ export function StreamingSummary({taskId, isTaskCompleted = false}:Props){
       if(!r.ok) throw new Error(`HTTP ${r.status}: ${r.statusText}`);
 
       const rd=r.body?.getReader();
-      if(!rd) throw new Error("无法获取响应流");
+      if(!rd) throw new Error(t("summary.stream.error"));
 
       const dec=new TextDecoder();
       let buf="";
@@ -126,16 +128,16 @@ export function StreamingSummary({taskId, isTaskCompleted = false}:Props){
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <FileText className="w-5 h-5" />
-                <CardTitle className="text-lg">智能摘要</CardTitle>
-                {ing&&(<Badge variant="default" className="animate-pulse"><Loader2 className="w-3 h-3 mr-1 animate-spin"/>生成中</Badge>)}
-                {started&&!ing&&txt&&(<Badge variant="secondary">已完成</Badge>)}
-                {waiting&&(<Badge variant="outline">等待转录完成</Badge>)}
+                <CardTitle className="text-lg">{t("summary.title")}</CardTitle>
+                {ing&&(<Badge variant="default" className="animate-pulse"><Loader2 className="w-3 h-3 mr-1 animate-spin"/>{t("summary.generating")}</Badge>)}
+                {started&&!ing&&txt&&(<Badge variant="secondary">{t("summary.completed")}</Badge>)}
+                {waiting&&(<Badge variant="outline">{t("summary.waiting")}</Badge>)}
               </div>
               <div className="flex items-center gap-2">
                 {/* 控制按钮移到这里 */}
-                {ing&&(<Button variant="outline" size="sm" onClick={(e) => {e.stopPropagation(); stop();}}>停止生成</Button>)}
-                {!ing&&txt&&(<Button variant="outline" size="sm" onClick={(e) => {e.stopPropagation(); regen();}}><RefreshCw className="w-4 h-4 mr-2"/>重新生成</Button>)}
-                {!ing&&!txt&&!waiting&&isTaskCompleted&&(<Button variant="outline" size="sm" onClick={(e) => {e.stopPropagation(); start();}}>开始生成</Button>)}
+                {ing&&(<Button variant="outline" size="sm" onClick={(e) => {e.stopPropagation(); stop();}}>{t("summary.stop")}</Button>)}
+                {!ing&&txt&&(<Button variant="outline" size="sm" onClick={(e) => {e.stopPropagation(); regen();}}><RefreshCw className="w-4 h-4 mr-2"/>{t("summary.regenerate")}</Button>)}
+                {!ing&&!txt&&!waiting&&isTaskCompleted&&(<Button variant="outline" size="sm" onClick={(e) => {e.stopPropagation(); start();}}>{t("summary.start")}</Button>)}
                 <Button variant="ghost" size="sm">{isOpen?<ChevronUp className="w-4 h-4"/>:<ChevronDown className="w-4 h-4"/>}</Button>
               </div>
             </div>
@@ -148,7 +150,7 @@ export function StreamingSummary({taskId, isTaskCompleted = false}:Props){
             <div className="min-h-[80px] max-h-[400px] overflow-y-auto">
               {err?(
                 <div className="text-red-500 p-4 bg-red-50 rounded-md">
-                  <p className="font-medium">生成失败</p>
+                  <p className="font-medium">{t("summary.failed")}</p>
                   <p className="text-sm mt-1">{err}</p>
                 </div>
               ):(
@@ -161,7 +163,7 @@ export function StreamingSummary({taskId, isTaskCompleted = false}:Props){
                     </div>
                   ) : (
                     <div className="text-muted-foreground text-sm py-4">
-                      {ing ? "正在生成智能摘要..." : "点击开始生成按钮开始生成摘要"}
+                      {ing ? t("summary.generating.text") : t("summary.start.text")}
                     </div>
                   )}
                   {ing&&(<span className="inline-block w-2 h-4 bg-primary animate-pulse ml-1"/>)}

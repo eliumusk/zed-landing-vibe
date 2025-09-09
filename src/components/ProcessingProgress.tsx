@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CheckCircle2, Clock, AlertCircle, Play, Bell, BellOff } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/lib/i18n";
 
 interface ProcessingProgressProps {
   taskId: string;
@@ -11,18 +12,22 @@ interface ProcessingProgressProps {
   onComplete?: () => void;
 }
 
-const STEP_CONFIG = {
-  extract_audio: { label: "提取音频", icon: "🎵", desc: "从视频中分离音频轨道" },
-  asr: { label: "语音识别", icon: "🎤", desc: "将音频转换为文字" },
-  merge_text: { label: "文本合并", icon: "📝", desc: "优化标点和句子结构" },
-  summary: { label: "生成摘要", icon: "📋", desc: "分析内容并生成摘要" },
-  multimodal: { label: "图文笔记", icon: "🖼️", desc: "提取关键帧并生成笔记" }
-};
+// 将在组件内部动态生成，使用i18n
 
 export function ProcessingProgress({ status, onComplete }: ProcessingProgressProps) {
+  const { t } = useI18n();
   const [notifyEnabled, setNotifyEnabled] = useState(false);
   const [hasCompleted, setHasCompleted] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
+
+  // 动态生成步骤配置
+  const STEP_CONFIG = {
+    extract_audio: { label: t("progress.extract_audio"), icon: "🎵", desc: t("progress.extract_audio.desc") },
+    asr: { label: t("progress.asr"), icon: "🎤", desc: t("progress.asr.desc") },
+    merge_text: { label: t("progress.merge_text"), icon: "📝", desc: t("progress.merge_text.desc") },
+    summary: { label: t("progress.summary"), icon: "📋", desc: t("progress.summary.desc") },
+    multimodal: { label: t("progress.multimodal"), icon: "🖼️", desc: t("progress.multimodal.desc") }
+  };
 
   useEffect(() => {
     const stored = localStorage.getItem("notify-enabled");
@@ -61,8 +66,8 @@ export function ProcessingProgress({ status, onComplete }: ProcessingProgressPro
 
     // 浏览器通知
     if (notifyEnabled && Notification.permission === "granted") {
-      new Notification("视频处理完成 ✅", {
-        body: "点击查看结果",
+      new Notification(t("progress.completed.notification"), {
+        body: t("progress.completed.body"),
         icon: "/favicon.ico"
       });
     }
@@ -125,7 +130,7 @@ export function ProcessingProgress({ status, onComplete }: ProcessingProgressPro
               isFailed ? "bg-red-500" : "bg-blue-500"
             )} />
             <h3 className="text-lg font-semibold text-gray-900">
-              {isFailed ? "处理失败" : "正在处理视频"}
+              {isFailed ? t("progress.failed") : t("progress.processing")}
             </h3>
           </div>
 
@@ -164,7 +169,7 @@ export function ProcessingProgress({ status, onComplete }: ProcessingProgressPro
         {/* 总体进度条 */}
         <div className="mb-8">
           <div className="flex justify-between items-center mb-2">
-            <span className="text-sm font-medium text-gray-700">总体进度</span>
+            <span className="text-sm font-medium text-gray-700">{t("progress.overall")}</span>
             <span className="text-sm text-gray-500">{Math.round(progress * 100)}%</span>
           </div>
           <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
@@ -224,7 +229,7 @@ export function ProcessingProgress({ status, onComplete }: ProcessingProgressPro
                     </h4>
                     {isActive && (
                       <Badge variant="secondary" className="text-xs animate-pulse">
-                        进行中
+                        {t("progress.active")}
                       </Badge>
                     )}
                   </div>
@@ -256,7 +261,7 @@ export function ProcessingProgress({ status, onComplete }: ProcessingProgressPro
         {/* 底部提示 */}
         <div className="mt-6 pt-4 border-t border-gray-200">
           <p className="text-xs text-gray-500 text-center">
-            处理完成后将自动刷新页面显示结果
+            {t("progress.completed.tip")}
           </p>
         </div>
       </CardContent>

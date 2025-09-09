@@ -11,6 +11,7 @@ import { streamAgent } from "@/lib/api";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { useLayout } from "@/lib/layout";
+import { useI18n } from "@/lib/i18n";
 
 interface AgentAssistantProps { taskId: string; }
 interface ChatMessage {
@@ -25,12 +26,13 @@ interface Position {
 }
 
 export function AgentAssistant({ taskId }: AgentAssistantProps) {
+  const { t } = useI18n();
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([{
     role: "assistant",
-    content: "你好，我是笔记润色助手。我可以帮你润色、改写、总结你的 Markdown 内容，或把口语化的记录优化为正式表达。"
+    content: t("agent.welcome")
   }]);
   const [position, setPosition] = useState<Position>({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
@@ -191,8 +193,8 @@ export function AgentAssistant({ taskId }: AgentAssistantProps) {
       );
     } catch (e) {
       console.error(e);
-      toast.error("发送失败，请稍后重试");
-      setMessages(p => [...p, { role: "assistant", content: "抱歉，服务暂时不可用。" }]);
+      toast.error(t("agent.send.error"));
+      setMessages(p => [...p, { role: "assistant", content: t("agent.service.error") }]);
     } finally {
       setSending(false);
     }
@@ -267,8 +269,8 @@ export function AgentAssistant({ taskId }: AgentAssistantProps) {
         <div className="flex items-center gap-2">
           <MessageSquare className="w-5 h-5 text-primary" />
           <div>
-            <h3 className="font-semibold text-sm">犀牛鸟助手</h3>
-            <p className="text-xs text-muted-foreground">与我对话，获得改写、润色、总结建议</p>
+            <h3 className="font-semibold text-sm">{t("agent.title")}</h3>
+            <p className="text-xs text-muted-foreground">{t("agent.description")}</p>
           </div>
         </div>
 
@@ -402,13 +404,13 @@ export function AgentAssistant({ taskId }: AgentAssistantProps) {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="输入要润色的内容或向我提问，按 Enter 发送，Shift+Enter 换行"
+              placeholder={t("agent.placeholder")}
               className="min-h-[44px] resize-none"
               rows={2}
             />
             <Button onClick={handleSend} disabled={!canSend} className="whitespace-nowrap">
               {sending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
-              发送
+              {t("agent.send")}
             </Button>
           </div>
         </div>
@@ -434,13 +436,13 @@ export function AgentAssistant({ taskId }: AgentAssistantProps) {
               <Button
                 size="icon"
                 className="rounded-full shadow-lg"
-                aria-label="打开润色助手"
+                aria-label={t("agent.tooltip")}
                 onClick={() => setOpen(true)}
               >
                 <MessageSquare className="w-5 h-5" />
               </Button>
             </TooltipTrigger>
-            <TooltipContent>润色助手</TooltipContent>
+            <TooltipContent>{t("agent.tooltip")}</TooltipContent>
           </Tooltip>
         </TooltipProvider>
       </div>

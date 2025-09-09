@@ -93,7 +93,92 @@ const zh: Dict = {
   "notes.crop.cancel": "取消",
   "notes.crop.apply": "应用裁剪",
   "notes.crop.error": "裁剪失败，请重试",
-  "notes.image.load.error": "图片加载失败，请检查链接或跨域设置"
+  "notes.image.load.error": "图片加载失败，请检查链接或跨域设置",
+
+  // Video Player
+  "video.preview": "视频预览",
+
+  // Subtitle Display
+  "subtitle.title": "字幕转录",
+  "subtitle.count": "条",
+  "subtitle.current": "当前播放",
+  "subtitle.empty": "暂无字幕数据",
+
+  // Streaming Summary
+  "summary.title": "智能摘要",
+  "summary.generating": "生成中",
+  "summary.completed": "已完成",
+  "summary.waiting": "等待转录完成",
+  "summary.stop": "停止生成",
+  "summary.regenerate": "重新生成",
+  "summary.start": "开始生成",
+  "summary.generating.text": "正在生成智能摘要...",
+  "summary.start.text": "点击开始生成按钮开始生成摘要",
+  "summary.failed": "生成失败",
+  "summary.stream.error": "无法获取响应流",
+
+  // Processing Progress
+  "progress.extract_audio": "提取音频",
+  "progress.asr": "语音识别",
+  "progress.merge_text": "文本合并",
+  "progress.summary": "生成摘要",
+  "progress.multimodal": "图文笔记",
+  "progress.extract_audio.desc": "从视频中分离音频轨道",
+  "progress.asr.desc": "将音频转换为文字",
+  "progress.merge_text.desc": "优化标点和句子结构",
+  "progress.summary.desc": "分析内容并生成摘要",
+  "progress.multimodal.desc": "提取关键帧并生成笔记",
+  "progress.overall": "总体进度",
+  "progress.completed.notification": "视频处理完成 ✅",
+  "progress.completed.body": "点击查看结果",
+  "progress.completed.tip": "处理完成后将自动刷新页面显示结果",
+  "progress.processing": "正在处理视频",
+  "progress.failed": "处理失败",
+  "progress.active": "进行中",
+
+  // Markdown Renderer
+  "markdown.title": "图文笔记",
+  "markdown.preview": "预览",
+  "markdown.edit": "编辑",
+  "markdown.export.md": "导出 MD",
+  "markdown.export.pdf": "导出 PDF",
+  "markdown.cancel": "取消",
+  "markdown.save": "保存更改",
+
+  // Agent Assistant
+  "agent.title": "犀牛鸟助手",
+  "agent.tooltip": "润色助手",
+  "agent.description": "与我对话，获得改写、润色、总结建议",
+  "agent.welcome": "你好，我是笔记润色助手。我可以帮你润色、改写、总结你的 Markdown 内容，或把口语化的记录优化为正式表达。",
+  "agent.send": "发送",
+  "agent.placeholder": "输入要润色的内容或向我提问，按 Enter 发送，Shift+Enter 换行",
+  "agent.send.error": "发送失败，请稍后重试",
+  "agent.service.error": "抱歉，服务暂时不可用。",
+
+  // Online Downloader
+  "download.status": "状态",
+  "download.downloading": "下载中...",
+  "download.processing": "处理中...",
+  "download.completed": "完成",
+  "download.failed": "失败",
+  "download.view.result": "查看结果",
+
+  // Upload Dialog
+  "upload.dialog.title": "上传并开始处理",
+  "upload.dialog.description": "选择本地视频文件后提交即可开始处理。",
+  "upload.file.label": "视频文件",
+  "upload.file.required": "请选择视频文件",
+  "upload.file.supported": "支持 mp4, avi, mov, mkv, webm",
+  "upload.success": "上传成功",
+  "upload.failed": "操作失败",
+  "upload.retry": "请稍后重试",
+  "upload.multimodal.label": "生成图文笔记",
+  "upload.multimodal.desc": "开启后将提取关键帧并生成图文笔记。",
+  "upload.keeptemp.label": "保留临时文件",
+  "upload.keeptemp.desc": "调试时可开启，默认关闭以节省空间。",
+  "upload.cancel": "取消",
+  "upload.start": "开始",
+  "upload.processing": "处理中…"
 };
 
 const en: Dict = {
@@ -175,7 +260,92 @@ const en: Dict = {
   "notes.crop.cancel": "Cancel",
   "notes.crop.apply": "Apply Crop",
   "notes.crop.error": "Cropping failed, please retry",
-  "notes.image.load.error": "Failed to load image. Check URL/CORS"
+  "notes.image.load.error": "Failed to load image. Check URL/CORS",
+
+  // Video Player
+  "video.preview": "Video Preview",
+
+  // Subtitle Display
+  "subtitle.title": "Subtitle Transcription",
+  "subtitle.count": "items",
+  "subtitle.current": "Currently Playing",
+  "subtitle.empty": "No subtitle data available",
+
+  // Streaming Summary
+  "summary.title": "Smart Summary",
+  "summary.generating": "Generating",
+  "summary.completed": "Completed",
+  "summary.waiting": "Waiting for transcription",
+  "summary.stop": "Stop Generation",
+  "summary.regenerate": "Regenerate",
+  "summary.start": "Start Generation",
+  "summary.generating.text": "Generating smart summary...",
+  "summary.start.text": "Click the start button to generate summary",
+  "summary.failed": "Generation Failed",
+  "summary.stream.error": "Unable to get response stream",
+
+  // Processing Progress
+  "progress.extract_audio": "Extract Audio",
+  "progress.asr": "Speech Recognition",
+  "progress.merge_text": "Merge Text",
+  "progress.summary": "Generate Summary",
+  "progress.multimodal": "Multimodal Notes",
+  "progress.extract_audio.desc": "Separating audio track from video",
+  "progress.asr.desc": "Converting audio to text",
+  "progress.merge_text.desc": "Optimizing punctuation and sentence structure",
+  "progress.summary.desc": "Analyzing content and generating summary",
+  "progress.multimodal.desc": "Extracting key frames and generating notes",
+  "progress.overall": "Overall Progress",
+  "progress.completed.notification": "Video Processing Completed ✅",
+  "progress.completed.body": "Click to view results",
+  "progress.completed.tip": "Page will auto-refresh to show results when processing is complete",
+  "progress.processing": "Processing Video",
+  "progress.failed": "Processing Failed",
+  "progress.active": "In Progress",
+
+  // Markdown Renderer
+  "markdown.title": "Multimodal Notes",
+  "markdown.preview": "Preview",
+  "markdown.edit": "Edit",
+  "markdown.export.md": "Export MD",
+  "markdown.export.pdf": "Export PDF",
+  "markdown.cancel": "Cancel",
+  "markdown.save": "Save Changes",
+
+  // Agent Assistant
+  "agent.title": "Rhino Assistant",
+  "agent.tooltip": "Polish Assistant",
+  "agent.description": "Chat with me to get rewriting, polishing, and summarizing suggestions",
+  "agent.welcome": "Hello, I'm your note polishing assistant. I can help you polish, rewrite, summarize your Markdown content, or optimize colloquial records into formal expressions.",
+  "agent.send": "Send",
+  "agent.placeholder": "Enter content to polish or ask me questions. Press Enter to send, Shift+Enter for new line",
+  "agent.send.error": "Send failed, please try again later",
+  "agent.service.error": "Sorry, service is temporarily unavailable.",
+
+  // Online Downloader
+  "download.status": "Status",
+  "download.downloading": "Downloading...",
+  "download.processing": "Processing...",
+  "download.completed": "Completed",
+  "download.failed": "Failed",
+  "download.view.result": "View Result",
+
+  // Upload Dialog
+  "upload.dialog.title": "Upload and Start Processing",
+  "upload.dialog.description": "Select a local video file and submit to start processing.",
+  "upload.file.label": "Video File",
+  "upload.file.required": "Please select a video file",
+  "upload.file.supported": "Supports mp4, avi, mov, mkv, webm",
+  "upload.success": "Upload successful",
+  "upload.failed": "Operation failed",
+  "upload.retry": "Please try again later",
+  "upload.multimodal.label": "Generate Multimodal Notes",
+  "upload.multimodal.desc": "Extract key frames and generate multimodal notes when enabled.",
+  "upload.keeptemp.label": "Keep Temporary Files",
+  "upload.keeptemp.desc": "Enable for debugging, disabled by default to save space.",
+  "upload.cancel": "Cancel",
+  "upload.start": "Start",
+  "upload.processing": "Processing..."
 };
 
 const dicts: Record<Lang, Dict> = { zh, en };

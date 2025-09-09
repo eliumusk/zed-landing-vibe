@@ -12,17 +12,17 @@ import OnlineDownloader from "@/components/OnlineDownloader";
 const Index = () => {
   const [openUpload, setOpenUpload] = useState(false);
   const logo = "/lovable-uploads/1a269a26-9009-4b73-80c2-654445d2810b.png";
+  const { t, lang } = useI18n();
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
     name: "FrameNote",
     applicationCategory: "EducationalApplication",
     operatingSystem: "Web, macOS, Linux, Windows",
-    description: "AI 视频笔记工具：一键提取PPT、自动生成讲义与知识图片，极速体验，隐私安全。",
+    description: t("seo.index.desc"),
     offers: { "@type": "Offer", price: "0", priceCurrency: "USD" }
   };
-
-  const { t, lang } = useI18n();
 
   useEffect(() => {
     document.title = t("seo.index.title");
